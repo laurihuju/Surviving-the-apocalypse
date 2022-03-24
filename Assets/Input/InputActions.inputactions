@@ -7,8 +7,16 @@
             "actions": [
                 {
                     "name": "Movement",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "c0533705-6b80-46a8-a855-b746d723fca9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "View",
+                    "type": "PassThrough",
+                    "id": "e93ed007-dfbc-4764-a586-963c7e0a8ee9",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
@@ -124,6 +132,17 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a35e6fa5-bcfb-400b-b50d-92023c6184d9",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
