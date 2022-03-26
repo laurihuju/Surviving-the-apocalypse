@@ -14,6 +14,10 @@ public class PlayerStatsManager : MonoBehaviour
     [Tooltip("The default amount of saturation that player has on the game start.")]
     [SerializeField] private float saturation;
 
+    /// <summary>
+    /// Sets the player's stamina.
+    /// </summary>
+    /// <param name="stamina"></param>
     public void SetStamina(float stamina)
     {
         this.stamina = stamina;
@@ -26,6 +30,10 @@ public class PlayerStatsManager : MonoBehaviour
         UpdateStaminaDisplay();
     }
 
+    /// <summary>
+    /// Sets the player's saturation.
+    /// </summary>
+    /// <param name="saturation"></param>
     public void SetSaturation(float saturation)
     {
         this.saturation = saturation;
@@ -38,16 +46,28 @@ public class PlayerStatsManager : MonoBehaviour
         UpdateHungerDisplay();
     }
 
+    /// <summary>
+    /// Changes the player's stamina amount by given parameter changeAmount. ChangeAmount can be positive or negative.
+    /// </summary>
+    /// <param name="changeAmount"></param>
     public void ChangeStamina(float changeAmount)
     {
         SetStamina(stamina + changeAmount);
     }
 
+    /// <summary>
+    /// Changes the player's saturation amount by given parameter changeAmount. ChangeAmount can be positive or negative.
+    /// </summary>
+    /// <param name="changeAmount"></param>
     public void ChangeSaturation(float changeAmount)
     {
         SetSaturation(saturation + changeAmount);
     }
 
+    /// <summary>
+    /// Sets the max stamina amount of the player.
+    /// </summary>
+    /// <param name="maxStamina"></param>
     public void SetMaxStamina(float maxStamina)
     {
         this.maxStamina = maxStamina;
@@ -58,6 +78,10 @@ public class PlayerStatsManager : MonoBehaviour
         UpdateStaminaDisplay();
     }
 
+    /// <summary>
+    /// Sets the max saturation of the player.
+    /// </summary>
+    /// <param name="maxSaturation"></param>
     public void SetMaxSaturation(float maxSaturation)
     {
         this.maxSaturation = maxSaturation;
@@ -66,6 +90,24 @@ public class PlayerStatsManager : MonoBehaviour
             saturation = maxSaturation;
 
         UpdateHungerDisplay();
+    }
+
+    /// <summary>
+    /// Returns the stamina of the player.
+    /// </summary>
+    /// <returns></returns>
+    public float GetStamina()
+    {
+        return stamina;
+    }
+
+    /// <summary>
+    /// Return the saturation of the player.
+    /// </summary>
+    /// <returns></returns>
+    public float GetSaturation()
+    {
+        return saturation;
     }
 
     private void UpdateStaminaDisplay()
