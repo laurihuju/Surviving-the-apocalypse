@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,15 @@ public class GroundItemManager : MonoBehaviour
         instance = this;
 
         items = new List<GroundItem>();
+
+        StartCoroutine(Test());
+    }
+
+    private IEnumerator Test()
+    {
+        yield return new WaitForSeconds(10);
+
+        AddGroundItem(35796, 1, new Vector3(531.7932f, 37.33791f, 365.3769f));
     }
 
     /// <summary>
