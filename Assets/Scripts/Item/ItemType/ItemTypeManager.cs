@@ -30,4 +30,13 @@ public class ItemTypeManager : MonoBehaviour
         }
         return null;
     }
+
+    /// <summary>
+    /// Returns the singleton instance of this class.
+    /// </summary>
+    /// <returns></returns>
+    public static ItemTypeManager GetInstance()
+    {
+        return instance;
+    }
 }

@@ -21,9 +21,18 @@ public abstract class ItemType : MonoBehaviour
     /// Instantiates a new item of this type to the given location.
     /// </summary>
     /// <param name="position"></param>
-    public void InstantiateItem(Vector3 position)
+    public GameObject InstantiateItem(Vector3 position)
     {
-        Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
+        return Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
+    }
+
+    /// <summary>
+    /// Instantiates a new item of this type to the given location with the given rotation.
+    /// </summary>
+    /// <param name="position"></param>
+    public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
+    {
+        return Instantiate(itemPrefab, position, rotation);
     }
 
     /// <summary>
