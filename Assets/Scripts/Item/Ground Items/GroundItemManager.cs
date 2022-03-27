@@ -74,7 +74,6 @@ public class GroundItemManager : MonoBehaviour
             GroundItem instantiatedItem = type.InstantiateItem(positions[i]).GetComponent<GroundItem>();
             if (instantiatedItem == null)
                 return;
-            instantiatedItem.SetAmount(positions.Length);
 
             items.Add(instantiatedItem);
         }
@@ -99,7 +98,6 @@ public class GroundItemManager : MonoBehaviour
             GroundItem instantiatedItem = type.InstantiateItem(positions[i], rotations[i]).GetComponent<GroundItem>();
             if (instantiatedItem == null)
                 return;
-            instantiatedItem.SetAmount(positions.Length);
 
             items.Add(instantiatedItem);
         }
