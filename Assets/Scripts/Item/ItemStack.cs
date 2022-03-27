@@ -13,6 +13,12 @@ public class ItemStack
         this.amount = amount;
     }
 
+    public ItemStack(int typeID)
+    {
+        this.typeID = typeID;
+        this.amount = 0;
+    }
+
     /// <summary>
     /// Returns the type ID of this item stack.
     /// </summary>

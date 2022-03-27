@@ -8,6 +8,9 @@ public abstract class ItemType : MonoBehaviour
     [Tooltip("The prefab to use when creating a new item of this type.")]
     [SerializeField] private GameObject itemPrefab;
 
+    [Tooltip("The maximum stack size of this type in inventory.")]
+    [SerializeField] private int stackSize = 1;
+
     /// <summary>
     /// Returns the type ID of this Item type.
     /// </summary>
@@ -15,6 +18,15 @@ public abstract class ItemType : MonoBehaviour
     public int GetTypeID()
     {
         return itemTypeID;
+    }
+
+    /// <summary>
+    /// Returns the maximum stack size of this type in inventory.
+    /// </summary>
+    /// <returns></returns>
+    public int GetStackSize()
+    {
+        return stackSize;
     }
 
     /// <summary>
