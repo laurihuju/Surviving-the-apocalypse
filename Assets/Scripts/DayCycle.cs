@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using OD;
 
 public class DayCycle : MonoBehaviour
 {
@@ -16,14 +18,13 @@ public class DayCycle : MonoBehaviour
     [SerializeField] private Gradient moonColor;
     [SerializeField] private AnimationCurve moonIntensity;
 
-    /*[Header("Clouds")]
-    [SerializeField] private Renderer cloudRenderer;
-    [SerializeField] private Gradient cloudColor;
-    [SerializeField] private Color testi;*/
+    [Header("Fog")]
+    [SerializeField] private Gradient fogColor;
+    [SerializeField] private Gradient fogSunColor;
+    [SerializeField] private AtmosphericFogRenderFeature fogFeature;
 
     [Header("Other")]
     [SerializeField] private AnimationCurve ambientIntensity;
-    [SerializeField] private Gradient fogColor;
 
     private void FixedUpdate()
     {
@@ -43,10 +44,8 @@ public class DayCycle : MonoBehaviour
 
         RenderSettings.ambientIntensity = ambientIntensity.Evaluate(time);
 
-        RenderSettings.fogColor = fogColor.Evaluate(time);
-
-        /*cloudRenderer.sharedMaterial.EnableKeyword("CloudColor");
-        cloudRenderer.sharedMaterial.SetColor("CloudColor", testi);
-        Debug.Log(cloudRenderer.sharedMaterial.GetColor("CloudColor"));*/
+        fogFeature.settings.color = fogColor.Evaluate(time);
+        fogFeature.settings.sunColor = fogSunColor.Evaluate(time);
+        //fogFeature.settings.fogDensityPower = fogIntensity.Evaluate(time);
     }
 }
