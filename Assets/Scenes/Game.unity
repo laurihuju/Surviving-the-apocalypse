@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 1531926975}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18376267, g: 0.22828132, b: 0.2995297, a: 1}
+  m_IndirectSpecularColor: {r: 0.18376012, g: 0.22827226, b: 0.29949543, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1215,6 +1215,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
@@ -2620,7 +2621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf4250175487754f97d6c8f0b6c5802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 0.157
+  time: 0.153
   timeAddition: 0
   sun: {fileID: 705507994}
   sunColor:
@@ -2780,8 +2781,8 @@ MonoBehaviour:
   fogSunColor:
     serializedVersion: 2
     key0: {r: 0.3490566, g: 0.31929082, b: 0.30789426, a: 1}
-    key1: {r: 0.7735849, g: 0.5854963, b: 0.54369885, a: 1}
-    key2: {r: 1, g: 0.77814853, b: 0.6745098, a: 1}
+    key1: {r: 0.6320754, g: 0.4660002, b: 0.40250087, a: 1}
+    key2: {r: 0.8301887, g: 0.5478132, b: 0.41901034, a: 1}
     key3: {r: 0.34901962, g: 0.31764707, b: 0.30980393, a: 0}
     key4: {r: 0.34901962, g: 0.31764707, b: 0.30980393, a: 0}
     key5: {r: 0.34901962, g: 0.31764707, b: 0.30980393, a: 0}
@@ -2820,13 +2821,13 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.021806637
     - serializedVersion: 3
-      time: 0.96
+      time: 0.6802683
       value: 0.20000815
-      inSlope: -0.040083252
-      outSlope: -0.040083252
+      inSlope: -3.2661262
+      outSlope: -3.2661262
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.21061644
+      inWeight: 0.028203344
       outWeight: 0.08504711
     - serializedVersion: 3
       time: 1
