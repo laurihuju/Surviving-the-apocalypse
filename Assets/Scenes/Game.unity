@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 1531926975}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18376012, g: 0.22827226, b: 0.29949543, a: 1}
+  m_IndirectSpecularColor: {r: 0.18375997, g: 0.22827198, b: 0.29949477, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1449,7 +1449,7 @@ Terrain:
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: dea76e3efed3f744d8bfa73bec294068, type: 2}
   m_TreeDistance: 5000
-  m_TreeBillboardDistance: 200
+  m_TreeBillboardDistance: 160
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
