@@ -7,6 +7,9 @@ public class Inventory : MonoBehaviour
     [Tooltip("The amount of slots in the inventory.")]
     [SerializeField] private int inventorySize;
 
+    [Header("UI")]
+    [SerializeField] private InventoryUISlot[] slots;
+
     private ItemStack[] items;
 
     private void Awake()
@@ -40,15 +43,20 @@ public class Inventory : MonoBehaviour
             if (slot == -1)
                 return addedAmount;
             if (items[slot] == null)
+            {
                 items[slot] = new ItemStack(typeID);
+                slots[slot].SetSlotImage(type.GetSprite());
+            }
 
             int maxAmountToAdd = type.GetStackSize() - items[slot].GetAmount();
             if (maxAmountToAdd >= amount)
             {
                 items[slot].SetAmount(items[slot].GetAmount() + amount);
+                slots[slot].SetSlotAmountText(items[slot].GetAmount());
                 return addedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() + maxAmountToAdd);
+            slots[slot].SetSlotAmountText(items[slot].GetAmount());
             amount -= maxAmountToAdd;
             addedAmount += maxAmountToAdd;
         }
@@ -78,13 +86,21 @@ public class Inventory : MonoBehaviour
             if(maxAmountToRemove >= amount)
             {
                 items[slot].SetAmount(items[slot].GetAmount() - amount);
+                slots[slot].SetSlotAmountText(items[slot].GetAmount());
                 if (items[slot].GetAmount() <= 0)
+                {
                     items[slot] = null;
+                    slots[slot].SetSlotImage(null);
+                }
                 return removedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
+            slots[slot].SetSlotAmountText(items[slot].GetAmount());
             if (items[slot].GetAmount() <= 0)
+            {
                 items[slot] = null;
+                slots[slot].SetSlotImage(null);
+            }
             amount -= maxAmountToRemove;
             removedAmount += maxAmountToRemove;
         }
@@ -106,13 +122,21 @@ public class Inventory : MonoBehaviour
         if(maxAmountToRemove >= amount)
         {
             items[slot].SetAmount(items[slot].GetAmount() - amount);
+            slots[slot].SetSlotAmountText(items[slot].GetAmount());
             if (items[slot].GetAmount() <= 0)
+            {
                 items[slot] = null;
+                slots[slot].SetSlotImage(null);
+            }
             return amount;
         }
         items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
+        slots[slot].SetSlotAmountText(items[slot].GetAmount());
         if (items[slot].GetAmount() <= 0)
+        {
             items[slot] = null;
+            slots[slot].SetSlotImage(null);
+        }
         return maxAmountToRemove;
     }
 
