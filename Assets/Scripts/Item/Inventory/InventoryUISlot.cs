@@ -30,6 +30,7 @@ public class InventoryUISlot : MonoBehaviour
     /// <param name="amount"></param>
     public void SetSlotAmountText(int amount)
     {
+        Debug.Log(amount);
         if(amount <= 0)
         {
             slotText.gameObject.SetActive(false);
@@ -37,7 +38,7 @@ public class InventoryUISlot : MonoBehaviour
         }
 
         if (!slotText.gameObject.activeSelf)
-            slotImage.gameObject.SetActive(true);
+            slotText.gameObject.SetActive(true);
         slotText.text = amount.ToString();
     }
 }

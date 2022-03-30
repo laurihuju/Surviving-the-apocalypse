@@ -13,8 +13,7 @@ public class ItemCollect : MonoBehaviour
 
         GroundItemManager.GetInstance().UnregisterGroundItem(groundItem);
 
-        Debug.Log("Ground item with id " + groundItem.GetTypeID() + " collected");
-
-        //Item collected. Code collection later when inventory is coded. Get collected item id from groundItem by calling groundItem.GetTypeID().
+        Inventory.GetInstance().AddItem(groundItem.GetTypeID(), groundItem.GetAmount());
+        Destroy(gameObject);
     }
 }
