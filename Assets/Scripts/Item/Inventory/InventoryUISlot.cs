@@ -7,6 +7,8 @@ public class InventoryUISlot : MonoBehaviour
     [SerializeField] private Image slotImage;
     [SerializeField] private TextMeshProUGUI slotText;
 
+    [SerializeField] private int slotIndex;
+
     /// <summary>
     /// Sets new image to the slot image.
     /// </summary>
@@ -40,5 +42,14 @@ public class InventoryUISlot : MonoBehaviour
         if (!slotText.gameObject.activeSelf)
             slotText.gameObject.SetActive(true);
         slotText.text = amount.ToString();
+    }
+
+    /// <summary>
+    /// Returns the index of this slot.
+    /// </summary>
+    /// <returns></returns>
+    public int GetSlotIndex()
+    {
+        return slotIndex;
     }
 }

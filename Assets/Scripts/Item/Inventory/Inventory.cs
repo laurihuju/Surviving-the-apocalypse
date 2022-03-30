@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
@@ -138,6 +140,69 @@ public class Inventory : MonoBehaviour
             slots[slot].SetSlotImage(null);
         }
         return maxAmountToRemove;
+    }
+
+    /// <summary>
+    /// Swaps the content in two slots.
+    /// </summary>
+    /// <param name="slot1"></param>
+    /// <param name="slot2"></param>
+    public void SwapSlots(int slot1, int slot2)
+    {
+        if (slot1 >= inventorySize || slot2 >= inventorySize || slot1 < 0 || slot2 < 0 || slot1 == slot2)
+            return;
+
+        ItemStack slot1Item = items[slot1];
+
+        items[slot1] = items[slot2];
+        items[slot2] = slot1Item;
+
+        if(items[slot1] != null)
+        {
+            ItemType slot1Type = ItemTypeManager.GetInstance().GetItemType(items[slot1].GetTypeID());
+            slots[slot1].SetSlotImage(slot1Type.GetSprite());
+            slots[slot1].SetSlotAmountText(items[slot1].GetAmount());
+        } else
+        {
+            slots[slot1].SetSlotImage(null);
+            slots[slot1].SetSlotAmountText(0);
+        }
+
+        if (items[slot2] != null)
+        {
+            ItemType slot2Type = ItemTypeManager.GetInstance().GetItemType(items[slot2].GetTypeID());
+            slots[slot2].SetSlotImage(slot2Type.GetSprite());
+            slots[slot2].SetSlotAmountText(items[slot2].GetAmount());
+        } else
+        {
+            slots[slot2].SetSlotImage(null);
+            slots[slot2].SetSlotAmountText(0);
+        }
+    }
+
+    /// <summary>
+    /// Returns the inventory slot in the given eventData click position. Returns null if slot didn't found.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <returns></returns>
+    public InventoryUISlot GetSlotInClickPosition(PointerEventData eventData)
+    {
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (!result.gameObject.CompareTag("InventorySlot"))
+                continue;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (slots[i].gameObject == result.gameObject)
+                {
+                    return slots[i];
+                }
+            }
+        }
+        return null;
     }
 
     /// <summary>
