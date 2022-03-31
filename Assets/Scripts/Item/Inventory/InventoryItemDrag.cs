@@ -39,6 +39,12 @@ public class InventoryItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpH
         if(slotInPosition != null)
         {
             Inventory.GetInstance().SwapSlots(slotIndex, slotInPosition.GetSlotIndex());
+        } else
+        {
+            ItemStack removedItems = Inventory.GetInstance().RemoveAllItemsFromSlot(slotIndex);
+            if (removedItems == null)
+                return;
+            GroundItemManager.GetInstance().AddGroundItem(removedItems.GetTypeID(), removedItems.GetAmount(), PlayerController.GetInstance().transform.position + Vector3.Normalize(PlayerController.GetInstance().transform.forward) * 2);
         }
     }
 

@@ -26,14 +26,6 @@ public class GroundItemManager : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         AddGroundItem(35796, 2, new Vector3(532.0046f, 37.8f, 365.2126f));
-
-        yield return new WaitForSeconds(5);
-
-        MenuSystem.MenuSystem.GetInstance().ShowPage(0);
-
-        yield return new WaitForSeconds(5);
-
-        MenuSystem.MenuSystem.GetInstance().Hide();
     }
 
     /// <summary>

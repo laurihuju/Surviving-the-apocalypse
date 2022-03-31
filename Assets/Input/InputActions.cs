@@ -53,6 +53,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InventoryOpen"",
+                    ""type"": ""Button"",
+                    ""id"": ""d357b3f4-0202-4d83-99cd-5cddd0fe1408"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -220,6 +229,17 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""40a9e9ab-a9d2-4774-8193-81ffdaed9921"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InventoryOpen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -231,6 +251,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Game_Movement = m_Game.FindAction("Movement", throwIfNotFound: true);
         m_Game_View = m_Game.FindAction("View", throwIfNotFound: true);
         m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
+        m_Game_InventoryOpen = m_Game.FindAction("InventoryOpen", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -293,6 +314,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Movement;
     private readonly InputAction m_Game_View;
     private readonly InputAction m_Game_Jump;
+    private readonly InputAction m_Game_InventoryOpen;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -300,6 +322,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Game_Movement;
         public InputAction @View => m_Wrapper.m_Game_View;
         public InputAction @Jump => m_Wrapper.m_Game_Jump;
+        public InputAction @InventoryOpen => m_Wrapper.m_Game_InventoryOpen;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -318,6 +341,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
+                @InventoryOpen.started -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
+                @InventoryOpen.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
+                @InventoryOpen.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -331,6 +357,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @InventoryOpen.started += instance.OnInventoryOpen;
+                @InventoryOpen.performed += instance.OnInventoryOpen;
+                @InventoryOpen.canceled += instance.OnInventoryOpen;
             }
         }
     }
@@ -340,5 +369,6 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnView(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnInventoryOpen(InputAction.CallbackContext context);
     }
 }

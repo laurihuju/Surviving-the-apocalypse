@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MenuSystem
+namespace Menu
 {
     public class MenuSystem : MonoBehaviour
     {
@@ -29,7 +29,7 @@ namespace MenuSystem
                 return;
             if (pages[index] == null)
                 return;
-
+            
             if (currentPage != -1)
             {
                 pages[currentPage].Hide();
@@ -39,6 +39,8 @@ namespace MenuSystem
 
             currentPage = index;
             pages[index].Show();
+
+            Cursor.lockState = CursorLockMode.None;
         }
 
         /// <summary>
@@ -49,6 +51,8 @@ namespace MenuSystem
             if (currentPage == -1)
                 return;
             pages[currentPage].Show();
+
+            Cursor.lockState = CursorLockMode.None;
         }
 
         /// <summary>
@@ -60,6 +64,13 @@ namespace MenuSystem
                 return;
             pages[currentPage].Hide();
             currentPage = -1;
+
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        public int GetOpenPage()
+        {
+            return currentPage;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MenuSystem
+namespace Menu
 {
     public class MenuPage : MonoBehaviour
     {

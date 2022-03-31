@@ -32,7 +32,6 @@ public class InventoryUISlot : MonoBehaviour
     /// <param name="amount"></param>
     public void SetSlotAmountText(int amount)
     {
-        Debug.Log(amount);
         if(amount <= 0)
         {
             slotText.gameObject.SetActive(false);

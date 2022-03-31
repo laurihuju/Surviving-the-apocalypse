@@ -1,7 +1,10 @@
 using UnityEngine;
+using Menu;
 
 public class PlayerController : MonoBehaviour
 {
+    private static PlayerController instance;
+
     private InputActions input;
 
     [SerializeField] private Rigidbody rigidBody;
@@ -29,6 +32,13 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
         input = new InputActions();
 
         input.Game.Movement.performed += context => movement = context.ReadValue<Vector2>();
@@ -37,6 +47,8 @@ public class PlayerController : MonoBehaviour
         input.Game.View.performed += context => mouseMovement = context.ReadValue<Vector2>();
 
         input.Game.Jump.performed += _ => Jump();
+
+        input.Game.InventoryOpen.performed += _ => OpenInventory();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -48,6 +60,14 @@ public class PlayerController : MonoBehaviour
         if (!IsGrounded())
             return;
         rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.y);
+    }
+
+    private void OpenInventory()
+    {
+        if (MenuSystem.GetInstance().GetOpenPage() == -1)
+            MenuSystem.GetInstance().ShowPage(0);
+        else
+            MenuSystem.GetInstance().Hide();
     }
 
     private bool IsGrounded()
@@ -68,5 +88,10 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         input.Enable();
+    }
+
+    public static PlayerController GetInstance()
+    {
+        return instance;
     }
 }

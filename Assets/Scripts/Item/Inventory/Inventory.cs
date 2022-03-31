@@ -142,6 +142,17 @@ public class Inventory : MonoBehaviour
         return maxAmountToRemove;
     }
 
+    public ItemStack RemoveAllItemsFromSlot(int slot)
+    {
+        ItemStack removedStack = items[slot];
+
+        items[slot] = null;
+        slots[slot].SetSlotImage(null);
+        slots[slot].SetSlotAmountText(0);
+
+        return removedStack;
+    }
+
     /// <summary>
     /// Swaps the content in two slots.
     /// </summary>
