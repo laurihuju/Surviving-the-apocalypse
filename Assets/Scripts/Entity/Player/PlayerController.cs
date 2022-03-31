@@ -5,8 +5,6 @@ public class PlayerController : MonoBehaviour
 {
     private static PlayerController instance;
 
-    private InputActions input;
-
     [SerializeField] private Rigidbody rigidBody;
 
     [Header("Movement")]
@@ -39,18 +37,27 @@ public class PlayerController : MonoBehaviour
         }
         instance = this;
 
-        input = new InputActions();
-
-        input.Game.Movement.performed += context => movement = context.ReadValue<Vector2>();
-        input.Game.Movement.canceled += context => movement = context.ReadValue<Vector2>();
-
-        input.Game.View.performed += context => mouseMovement = context.ReadValue<Vector2>();
-
-        input.Game.Jump.performed += _ => Jump();
-
-        input.Game.InventoryOpen.performed += _ => OpenInventory();
-
         Physics.gravity = new Vector3(0, gravity, 0);
+    }
+
+    private void Start()
+    {
+        InputManager.GetInstance().GetInputActions().Game.Movement.performed += context => movement = context.ReadValue<Vector2>();
+        InputManager.GetInstance().GetInputActions().Game.Movement.canceled += context => movement = context.ReadValue<Vector2>();
+
+        InputManager.GetInstance().GetInputActions().Game.View.performed += context => mouseMovement = context.ReadValue<Vector2>();
+
+        InputManager.GetInstance().GetInputActions().Game.Jump.performed += _ => Jump();
+
+        InputManager.GetInstance().GetInputActions().Game.InventoryOpen.performed += _ => MenuSystem.GetInstance().ShowPage(0);
+        InputManager.GetInstance().GetInputActions().Menu.Exit.performed += _ => MenuSystem.GetInstance().Hide();
+
+        InputManager.GetInstance().AddDisableCallback(disabledControls => {
+            if (disabledControls != 0)
+                return;
+            movement = Vector3.zero;
+            mouseMovement = Vector3.zero;
+        });
     }
 
     private void Jump()
@@ -58,14 +65,6 @@ public class PlayerController : MonoBehaviour
         if (!IsGrounded())
             return;
         rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.y);
-    }
-
-    private void OpenInventory()
-    {
-        if (MenuSystem.GetInstance().GetOpenPage() == -1)
-            MenuSystem.GetInstance().ShowPage(0);
-        else
-            MenuSystem.GetInstance().Hide();
     }
 
     private bool IsGrounded()
@@ -81,16 +80,6 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(new Vector3(0, mouseMovement.x * cameraSpeed, 0));
         Camera.main.transform.Rotate(new Vector3(mouseMovement.y * -cameraSpeed, 0, 0));
-    }
-
-    private void OnEnable()
-    {
-        input.Enable();
-    }
-
-    public InputActions GetInputActions()
-    {
-        return input;
     }
 
     public static PlayerController GetInstance()

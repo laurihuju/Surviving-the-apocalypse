@@ -17,8 +17,6 @@ namespace Menu
                 return;
             }
             instance = this;
-
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace Menu
             currentPage = index;
             pages[index].Show();
 
-            Cursor.lockState = CursorLockMode.None;
+            InputManager.GetInstance().EnableMenuControls();
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace Menu
                 return;
             pages[currentPage].Show();
 
-            Cursor.lockState = CursorLockMode.None;
+            InputManager.GetInstance().EnableMenuControls();
         }
 
         /// <summary>
@@ -67,7 +65,7 @@ namespace Menu
             pages[currentPage].Hide();
             currentPage = -1;
 
-            Cursor.lockState = CursorLockMode.Locked;
+            InputManager.GetInstance().EnableGameControls();
         }
 
         public int GetOpenPage()

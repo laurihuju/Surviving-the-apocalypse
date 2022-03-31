@@ -28,7 +28,7 @@ public class HotBar : MonoBehaviour
 
     private void Start()
     {
-        PlayerController.GetInstance().GetInputActions().Game.Scroll.performed += context => Scroll(context.ReadValue<float>());
+        InputManager.GetInstance().GetInputActions().Game.Scroll.performed += context => Scroll(context.ReadValue<float>());
 
         activeSlot = firstSlot;
         Inventory.GetInstance().GetSlot(firstSlot).GetComponent<RectTransform>().sizeDelta = new Vector2(activeSlotSize, activeSlotSize);

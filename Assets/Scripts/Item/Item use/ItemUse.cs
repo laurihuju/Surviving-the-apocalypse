@@ -4,7 +4,7 @@ public class ItemUse : MonoBehaviour
 {
     private void Start()
     {
-        PlayerController.GetInstance().GetInputActions().Game.Use.performed += _ => UseItem();
+        InputManager.GetInstance().GetInputActions().Game.Use.performed += _ => UseItem();
     }
 
     private void UseItem()

@@ -6,6 +6,11 @@ namespace Menu
     {
         [SerializeField] private Animator anim;
 
+        private void Start()
+        {
+            gameObject.SetActive(false);
+        }
+
         /// <summary>
         /// Activates the menu page and shows the fade in animation.
         /// </summary>
