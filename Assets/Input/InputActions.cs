@@ -62,6 +62,24 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""2fb0dac4-2a3d-4376-9ae4-ee1019eb826f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Use"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef897c15-d07a-4c19-90cf-4238a5c4a2bb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +258,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""InventoryOpen"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3bb8e634-bffb-46fc-9cdd-aded3d14fe60"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""149b4a52-e630-451e-8a97-1e33e10d6cfc"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -252,6 +292,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Game_View = m_Game.FindAction("View", throwIfNotFound: true);
         m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
         m_Game_InventoryOpen = m_Game.FindAction("InventoryOpen", throwIfNotFound: true);
+        m_Game_Scroll = m_Game.FindAction("Scroll", throwIfNotFound: true);
+        m_Game_Use = m_Game.FindAction("Use", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -315,6 +357,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_View;
     private readonly InputAction m_Game_Jump;
     private readonly InputAction m_Game_InventoryOpen;
+    private readonly InputAction m_Game_Scroll;
+    private readonly InputAction m_Game_Use;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -323,6 +367,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @View => m_Wrapper.m_Game_View;
         public InputAction @Jump => m_Wrapper.m_Game_Jump;
         public InputAction @InventoryOpen => m_Wrapper.m_Game_InventoryOpen;
+        public InputAction @Scroll => m_Wrapper.m_Game_Scroll;
+        public InputAction @Use => m_Wrapper.m_Game_Use;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -344,6 +390,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @InventoryOpen.started -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
                 @InventoryOpen.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
                 @InventoryOpen.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnInventoryOpen;
+                @Scroll.started -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
+                @Scroll.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
+                @Scroll.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
+                @Use.started -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
+                @Use.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
+                @Use.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -360,6 +412,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @InventoryOpen.started += instance.OnInventoryOpen;
                 @InventoryOpen.performed += instance.OnInventoryOpen;
                 @InventoryOpen.canceled += instance.OnInventoryOpen;
+                @Scroll.started += instance.OnScroll;
+                @Scroll.performed += instance.OnScroll;
+                @Scroll.canceled += instance.OnScroll;
+                @Use.started += instance.OnUse;
+                @Use.performed += instance.OnUse;
+                @Use.canceled += instance.OnUse;
             }
         }
     }
@@ -370,5 +428,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnView(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInventoryOpen(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
+        void OnUse(InputAction.CallbackContext context);
     }
 }

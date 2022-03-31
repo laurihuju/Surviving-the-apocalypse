@@ -17,6 +17,8 @@ namespace Menu
                 return;
             }
             instance = this;
+
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         /// <summary>

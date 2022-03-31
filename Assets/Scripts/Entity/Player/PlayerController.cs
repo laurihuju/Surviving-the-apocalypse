@@ -50,8 +50,6 @@ public class PlayerController : MonoBehaviour
 
         input.Game.InventoryOpen.performed += _ => OpenInventory();
 
-        Cursor.lockState = CursorLockMode.Locked;
-
         Physics.gravity = new Vector3(0, gravity, 0);
     }
 
@@ -88,6 +86,11 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         input.Enable();
+    }
+
+    public InputActions GetInputActions()
+    {
+        return input;
     }
 
     public static PlayerController GetInstance()

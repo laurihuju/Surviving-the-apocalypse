@@ -282,6 +282,16 @@ public class Inventory : MonoBehaviour
         return -1;
     }
 
+    public InventoryUISlot GetSlot(int index)
+    {
+        return slots[index];
+    }
+
+    public ItemStack GetStack(int slot)
+    {
+        return items[slot];
+    }
+
     /// <summary>
     /// Returns the singleton instance of Inventory class.
     /// </summary>
