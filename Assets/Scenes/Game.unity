@@ -9023,7 +9023,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d574bbe5d7c4cc419cafc985fed20e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlaceDistance: 5
+  maxPlaceDistance: 7
+  blueprintMaterial: {fileID: 2100000, guid: dc5ac1bc87820b54cbeab5a80278d0e1, type: 2}
+  blueprintCanPlaceColor: {r: 0.2721253, g: 0.76915205, b: 0.9811321, a: 1}
+  blueprintCannotPlaceColor: {r: 0.9245283, g: 0.23898178, b: 0.23898178, a: 1}
 --- !u!1 &1666559521
 GameObject:
   m_ObjectHideFlags: 0

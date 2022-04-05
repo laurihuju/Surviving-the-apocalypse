@@ -13,6 +13,8 @@ public abstract class PlaceableItem : ItemType
     private Vector3 placementCheckOffset;
     private Vector3 placementCheckSize;
 
+    protected bool canPlace;
+
     private void Start()
     {
         placementCheckOffset = new Vector3(objectWidth / 2, objectHeight / 2, objectWidth / -2);
@@ -21,7 +23,40 @@ public abstract class PlaceableItem : ItemType
 
     public virtual bool CanPlace(Vector3 location, float yRotation)
     {
-        return GetPlaceLocation(location, yRotation) != Vector3.zero;
+        Quaternion rotation = Quaternion.Euler(0, yRotation, 0);
+
+        for (float y = 0; y <= maxPlaceHeight; y += 0.1f)
+        {
+            Vector3 checkLocation = location + Vector3.up * y + rotation * placementCheckOffset;
+
+            if (Physics.OverlapBox(checkLocation, placementCheckSize, rotation).Length != 0)
+                continue;
+
+            if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, 0), Vector3.down, maxPlaceHeight))
+            {
+                canPlace = false;
+                return false;
+            }
+            if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(0, 0, -objectWidth), Vector3.down, maxPlaceHeight))
+            {
+                canPlace = false;
+                return false;
+            }
+            if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, -objectWidth), Vector3.down, maxPlaceHeight))
+            {
+                canPlace = false;
+                return false;
+            }
+            canPlace = true;
+            return true;
+        }
+        canPlace = false;
+        return false;
+    }
+
+    public bool CanPlaceNoCheck()
+    {
+        return canPlace;
     }
 
     public virtual Vector3 GetPlaceLocation(Vector3 location, float yRotation)
@@ -36,14 +71,25 @@ public abstract class PlaceableItem : ItemType
                 continue;
 
             if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, 0), Vector3.down, maxPlaceHeight))
-                return Vector3.zero;
+            {
+                canPlace = false;
+                return location + rotation * placementCheckOffset;
+            }
             if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(0, 0, -objectWidth), Vector3.down, maxPlaceHeight))
-                return Vector3.zero;
+            {
+                canPlace = false;
+                return location + rotation * placementCheckOffset;
+            }
             if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, -objectWidth), Vector3.down, maxPlaceHeight))
-                return Vector3.zero;
+            {
+                canPlace = false;
+                return location + rotation * placementCheckOffset;
+            }
+            canPlace = true;
             return checkLocation;
         }
-        return Vector3.zero;
+        canPlace = false;
+        return location + rotation * placementCheckOffset;
     }
 
     public override GameObject InstantiateItem(Vector3 position)
