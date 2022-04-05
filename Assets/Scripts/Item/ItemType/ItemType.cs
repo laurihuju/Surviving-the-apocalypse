@@ -41,10 +41,19 @@ public abstract class ItemType : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns the ground item prefab of the item type.
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetPrefab()
+    {
+        return itemPrefab;
+    }
+
+    /// <summary>
     /// Instantiates a new item of this type to the given location.
     /// </summary>
     /// <param name="position"></param>
-    public GameObject InstantiateItem(Vector3 position)
+    public virtual GameObject InstantiateItem(Vector3 position)
     {
         return Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
     }
@@ -53,7 +62,7 @@ public abstract class ItemType : MonoBehaviour
     /// Instantiates a new item of this type to the given location with the given rotation.
     /// </summary>
     /// <param name="position"></param>
-    public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
+    public virtual GameObject InstantiateItem(Vector3 position, Quaternion rotation)
     {
         return Instantiate(itemPrefab, position, rotation);
     }
