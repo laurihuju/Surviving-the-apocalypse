@@ -49,7 +49,12 @@ public class ItemPlace : MonoBehaviour
             return;
         }
         Vector3 placeLocation = currentItem.GetPlaceLocation(faceLocation, PlayerController.GetInstance().transform.rotation.eulerAngles.y);
-        previewTransform.SetPositionAndRotation(placeLocation, PlayerController.GetInstance().transform.rotation);
+        Quaternion placeRotation;
+        if (currentItem.CanSnapNoCheck())
+            placeRotation = currentItem.GetSnapLocationNoCheck();
+        else
+            placeRotation = PlayerController.GetInstance().transform.rotation;
+        previewTransform.SetPositionAndRotation(placeLocation, placeRotation);
 
         if (currentItem.CanPlaceNoCheck())
         {
@@ -72,7 +77,9 @@ public class ItemPlace : MonoBehaviour
 
     private void PreparePreviewItem(Transform item)
     {
-        item.GetComponent<MeshRenderer>().material = blueprintMaterial;
+        MeshRenderer renderer = item.GetComponent<MeshRenderer>();
+        if(renderer != null)
+            renderer.material = blueprintMaterial;
 
         foreach (Collider collider in item.GetComponents<Collider>())
         {
@@ -90,7 +97,12 @@ public class ItemPlace : MonoBehaviour
             return;
         if (!placeableItem.CanPlaceNoCheck())
             return;
-        GroundItemManager.GetInstance().AddGroundItem(placeableItem.GetTypeID(), 1, placeLocation, PlayerController.GetInstance().transform.rotation);
+        Quaternion placeRotation;
+        if (placeableItem.CanSnapNoCheck())
+            placeRotation = placeableItem.GetSnapLocationNoCheck();
+        else
+            placeRotation = PlayerController.GetInstance().transform.rotation;
+        GroundItemManager.GetInstance().AddGroundItem(placeableItem.GetTypeID(), 1, placeLocation, placeRotation);
     }
 
     private PlaceableItem GetCurrentItem()
