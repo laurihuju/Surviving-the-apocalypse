@@ -10,20 +10,24 @@ public abstract class PlaceableItem : ItemType
     [Tooltip("The maximum height from ground to allow object placement.")]
     [SerializeField] [Range(0, 2)] protected float maxPlaceHeight;
     [Tooltip("The layers that can contain obstacles that can prevent the object placing.")]
-    [SerializeField] private LayerMask obstacleLayers;
+    [SerializeField] protected LayerMask obstacleLayers;
 
     [Header("Snapping")]
     [Tooltip("The IDs of the snappers to snap this object.")]
-    [SerializeField] private float[] snappers;
+    [SerializeField] protected float[] snappers;
     [Tooltip("The layers that can contain snappers.")]
-    [SerializeField] private LayerMask snapperLayers;
+    [SerializeField] protected LayerMask snapperLayers;
     [Tooltip("The maximum range of snappers to snap.")]
-    [SerializeField] private Vector3 maxSnapRange;
+    [SerializeField] protected Vector3 maxSnapRange;
     [Tooltip("If true, the item can be placed only on snappers.")]
-    [SerializeField] private bool requireSnapper;
+    [SerializeField] protected bool requireSnapper;
 
-    private Vector3 placementCheckOffset;
-    private Vector3 placementCheckSize;
+    [Header("Other")]
+    [Tooltip("The prefab to use when placing this object to the ground.")]
+    [SerializeField] protected GameObject objectPrefab;
+
+    protected Vector3 placementCheckOffset;
+    protected Vector3 placementCheckSize;
 
     protected bool canPlace;
     protected ItemSnapper snapper;
@@ -32,69 +36,6 @@ public abstract class PlaceableItem : ItemType
     {
         placementCheckOffset = new Vector3(objectWidth / 2, objectHeight / 2, objectWidth / -2);
         placementCheckSize = new Vector3(objectWidth / 2 - 0.01f, objectHeight / 2 - 0.01f, objectWidth / 2 - 0.01f);
-    }
-
-    public virtual bool CanPlace(Vector3 location, float yRotation)
-    {
-        snapper = null;
-        if (snappers.Length > 0)
-        {
-            Collider[] possibleSnappers = Physics.OverlapBox(location, maxSnapRange, transform.rotation, snapperLayers.value);
-            if (possibleSnappers.Length != 0)
-            {
-                for (int i = 0; i < possibleSnappers.Length; i++)
-                {
-                    ItemSnapper snapper = possibleSnappers[i].GetComponent<ItemSnapper>();
-                    if (snapper == null)
-                        continue;
-                    if (!IsRightSnapper(snapper.GetID()))
-                        continue;
-
-                    location = snapper.GetPosition();
-                    yRotation = snapper.GetRotation().eulerAngles.y;
-
-                    this.snapper = snapper;
-                    break;
-                }
-            } else if (requireSnapper)
-            {
-                canPlace = false;
-                return false;
-            }
-        }
-
-        Quaternion rotation = Quaternion.Euler(0, yRotation, 0);
-
-        for (float y = 0; y <= maxPlaceHeight; y += 0.1f)
-        {
-            Vector3 checkLocation = location + Vector3.up * y + rotation * placementCheckOffset;
-
-            if (Physics.OverlapBox(checkLocation, placementCheckSize, rotation, obstacleLayers.value).Length != 0)
-                continue;
-
-            if (!CanSnapNoCheck())
-            {
-                if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, 0), Vector3.down, maxPlaceHeight))
-                {
-                    canPlace = false;
-                    return false;
-                }
-                if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(0, 0, -objectWidth), Vector3.down, maxPlaceHeight))
-                {
-                    canPlace = false;
-                    return false;
-                }
-                if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, -objectWidth), Vector3.down, maxPlaceHeight))
-                {
-                    canPlace = false;
-                    return false;
-                }
-            }
-            canPlace = true;
-            return true;
-        }
-        canPlace = false;
-        return false;
     }
 
     public bool CanPlaceNoCheck()
@@ -184,10 +125,10 @@ public abstract class PlaceableItem : ItemType
 
     public override GameObject InstantiateItem(Vector3 position, Quaternion rotation)
     {
-        return Instantiate(GetPrefab(), GetPlaceLocation(position, rotation.eulerAngles.y), rotation);
+        return Instantiate(objectPrefab, GetPlaceLocation(position, rotation.eulerAngles.y), rotation);
     }
 
-    private bool IsRightSnapper(int id)
+    protected bool IsRightSnapper(int id)
     {
         for(int i = 0; i < snappers.Length; i++)
         {
