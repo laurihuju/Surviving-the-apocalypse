@@ -12,6 +12,8 @@ public class GroundItemData : ItemStack
     private float rotZ;
     private float rotW;
 
+    private bool showBase;
+
     public GroundItemData(int typeID, int amount, Vector3 position, Quaternion rotation) : base(typeID, amount)
     {
         posX = position.x;
@@ -22,6 +24,20 @@ public class GroundItemData : ItemStack
         rotY = rotation.y;
         rotZ = rotation.z;
         rotW = rotation.w;
+    }
+
+    public GroundItemData(int typeID, Vector3 position, Quaternion rotation, bool showBase) : base(typeID)
+    {
+        posX = position.x;
+        posY = position.y;
+        posZ = position.z;
+
+        rotX = rotation.x;
+        rotY = rotation.y;
+        rotZ = rotation.z;
+        rotW = rotation.w;
+
+        this.showBase = showBase;
     }
 
     /// <summary>
@@ -54,6 +70,11 @@ public class GroundItemData : ItemStack
         rotY = rotation.y;
         rotZ = rotation.z;
         rotW = rotation.w;
+    }
+
+    public bool ShowBase()
+    {
+        return showBase;
     }
 
     /// <summary>

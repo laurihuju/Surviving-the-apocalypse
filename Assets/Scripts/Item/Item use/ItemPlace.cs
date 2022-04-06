@@ -13,6 +13,7 @@ public class ItemPlace : MonoBehaviour
     [SerializeField] private Color blueprintCannotPlaceColor;
 
     private Transform previewTransform;
+    private GameObject previewBase;
 
     private void Start()
     {
@@ -26,34 +27,52 @@ public class ItemPlace : MonoBehaviour
         PlaceableItem currentItem = GetCurrentItem();
         if (currentItem == null)
         {
-            if (previewTransform == null)
-                return;
-            Destroy(previewTransform.gameObject);
-            previewTransform = null;
+            if (previewTransform != null)
+            {
+                Destroy(previewTransform.gameObject);
+                previewTransform = null;
+            }
+            if (previewBase != null)
+            {
+                Destroy(previewBase.gameObject);
+                previewBase = null;
+            }
             return;
         }
         Vector3 faceLocation = GetPlaceLocation();
         if (faceLocation == Vector3.zero)
         {
-            if (previewTransform == null)
-                return;
-            Destroy(previewTransform.gameObject);
-            previewTransform = null;
+            if (previewTransform != null)
+            {
+                Destroy(previewTransform.gameObject);
+                previewTransform = null;
+            }
+            if (previewBase != null)
+            {
+                Destroy(previewBase.gameObject);
+                previewBase = null;
+            }
             return;
         }
 
-        if (previewTransform == null)
+        if (previewTransform == null || previewBase == null)
         {
-            previewTransform = currentItem.InstantiateItem(faceLocation, PlayerController.GetInstance().transform.rotation).transform;
+            previewTransform = currentItem.PlaceItem(faceLocation, PlayerController.GetInstance().transform.rotation).transform;
             PreparePreviewItems();
             return;
         }
         Vector3 placeLocation = currentItem.GetPlaceLocation(faceLocation, PlayerController.GetInstance().transform.rotation.eulerAngles.y);
         Quaternion placeRotation;
         if (currentItem.CanSnapNoCheck())
+        {
             placeRotation = currentItem.GetSnapLocationNoCheck();
+            previewBase.SetActive(false);
+        }
         else
+        {
             placeRotation = PlayerController.GetInstance().transform.rotation;
+            previewBase.SetActive(true);
+        }
         previewTransform.SetPositionAndRotation(placeLocation, placeRotation);
 
         if (currentItem.CanPlaceNoCheck())
@@ -81,6 +100,9 @@ public class ItemPlace : MonoBehaviour
         if(renderer != null)
             renderer.material = blueprintMaterial;
 
+        if (item.CompareTag("ItemBase"))
+            previewBase = item.gameObject;
+
         foreach (Collider collider in item.GetComponents<Collider>())
         {
             collider.enabled = false;
@@ -98,11 +120,16 @@ public class ItemPlace : MonoBehaviour
         if (!placeableItem.CanPlaceNoCheck())
             return;
         Quaternion placeRotation;
+        bool showBase;
         if (placeableItem.CanSnapNoCheck())
+        {
             placeRotation = placeableItem.GetSnapLocationNoCheck();
-        else
+            showBase = false;
+        } else{
             placeRotation = PlayerController.GetInstance().transform.rotation;
-        GroundItemManager.GetInstance().AddGroundItem(placeableItem.GetTypeID(), 1, placeLocation, placeRotation);
+            showBase = true;
+        }
+        GroundItemManager.GetInstance().PlaceItem(placeableItem.GetTypeID(), placeLocation, placeRotation, showBase);
     }
 
     private PlaceableItem GetCurrentItem()

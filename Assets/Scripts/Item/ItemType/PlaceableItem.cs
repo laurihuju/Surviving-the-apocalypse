@@ -118,12 +118,7 @@ public abstract class PlaceableItem : ItemType
         return snapper.GetRotation();
     }
 
-    public override GameObject InstantiateItem(Vector3 position)
-    {
-        return Instantiate(GetPrefab(), position, GetPrefab().transform.rotation);
-    }
-
-    public override GameObject InstantiateItem(Vector3 position, Quaternion rotation)
+    public virtual GameObject PlaceItem(Vector3 position, Quaternion rotation)
     {
         return Instantiate(objectPrefab, GetPlaceLocation(position, rotation.eulerAngles.y), rotation);
     }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - InventorySlot
   - Snapper
+  - ItemBase
   layers:
   - Default
   - TransparentFX

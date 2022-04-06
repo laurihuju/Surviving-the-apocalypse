@@ -6,7 +6,8 @@ public class GroundItemManager : MonoBehaviour
 {
     private static GroundItemManager instance;
 
-    private List<GroundItem> items;
+    private List<GroundItem> groundItems;
+    private List<PlacedItem> placedItems;
 
     private void Awake()
     {
@@ -17,7 +18,8 @@ public class GroundItemManager : MonoBehaviour
         }
         instance = this;
 
-        items = new List<GroundItem>();
+        groundItems = new List<GroundItem>();
+        placedItems = new List<PlacedItem>();
 
         StartCoroutine(Test());
     }
@@ -44,7 +46,7 @@ public class GroundItemManager : MonoBehaviour
             return;
         instantiatedItem.SetAmount(amount);
 
-        items.Add(instantiatedItem);
+        groundItems.Add(instantiatedItem);
     }
 
     /// <summary>
@@ -64,7 +66,7 @@ public class GroundItemManager : MonoBehaviour
             return;
         instantiatedItem.SetAmount(amount);
 
-        items.Add(instantiatedItem);
+        groundItems.Add(instantiatedItem);
     }
 
     /// <summary>
@@ -84,7 +86,7 @@ public class GroundItemManager : MonoBehaviour
             if (instantiatedItem == null)
                 return;
 
-            items.Add(instantiatedItem);
+            groundItems.Add(instantiatedItem);
         }
     }
 
@@ -108,8 +110,26 @@ public class GroundItemManager : MonoBehaviour
             if (instantiatedItem == null)
                 return;
 
-            items.Add(instantiatedItem);
+            groundItems.Add(instantiatedItem);
         }
+    }
+
+    public void PlaceItem(int itemType, Vector3 position, Quaternion rotation, bool showBase)
+    {
+        ItemType type = ItemTypeManager.GetInstance().GetItemType(itemType);
+        if (type == null)
+            return;
+        PlaceableItem placeableItem = type as PlaceableItem;
+        if (placeableItem == null)
+            return;
+        PlacedItem instantiatedItem = placeableItem.PlaceItem(position, rotation).GetComponent<PlacedItem>();
+        if (instantiatedItem == null)
+            return;
+        GameObject itemBase = instantiatedItem.GetItemBase();
+        if (itemBase != null)
+            itemBase.SetActive(showBase);
+
+        placedItems.Add(instantiatedItem);
     }
 
     /// <summary>
@@ -118,7 +138,7 @@ public class GroundItemManager : MonoBehaviour
     /// <param name="item"></param>
     public void UnregisterGroundItem(GroundItem item)
     {
-        items.Remove(item);
+        groundItems.Remove(item);
     }
 
     /// <summary>
