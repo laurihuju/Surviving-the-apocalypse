@@ -15,6 +15,9 @@ public class HotBar : MonoBehaviour
     [SerializeField] private float activeSlotSize;
 
     private int activeSlot;
+    private ItemStack selectedStack;
+
+    private bool shiftPressed = false;
 
     private void Awake()
     {
@@ -29,13 +32,42 @@ public class HotBar : MonoBehaviour
     private void Start()
     {
         InputManager.GetInstance().GetInputActions().Game.Scroll.performed += context => Scroll(context.ReadValue<float>());
+        InputManager.GetInstance().GetInputActions().Game.Shift.performed += context => shiftPressed = true;
+        InputManager.GetInstance().GetInputActions().Game.Shift.canceled += context => shiftPressed = false;
 
         activeSlot = firstSlot;
         Inventory.GetInstance().GetSlot(firstSlot).GetComponent<RectTransform>().sizeDelta = new Vector2(activeSlotSize, activeSlotSize);
     }
 
+    private void Update()
+    {
+        if (Inventory.GetInstance().GetStack(activeSlot) != selectedStack)
+        {
+            if (selectedStack != null)
+            {
+                ItemType selectedType = ItemTypeManager.GetInstance().GetItemType(selectedStack.GetTypeID());
+                if (selectedType != null)
+                {
+                    selectedType.OnDeselect();
+                }
+            }
+            selectedStack = Inventory.GetInstance().GetStack(activeSlot);
+            if (selectedStack != null)
+            {
+                ItemType selectedType = ItemTypeManager.GetInstance().GetItemType(selectedStack.GetTypeID());
+                if (selectedType != null)
+                {
+                    selectedType.OnSelect();
+                }
+            }
+        }
+    }
+
     private void Scroll(float direction)
     {
+        if (shiftPressed)
+            return;
+
         if(direction < 0)
         {
             activeSlot++;
@@ -44,7 +76,6 @@ public class HotBar : MonoBehaviour
                 activeSlot = lastSlot;
                 return;
             }
-
             Inventory.GetInstance().GetSlot(activeSlot - 1).GetComponent<RectTransform>().sizeDelta = new Vector2(normalSlotSize, normalSlotSize);
         } else if (direction > 0)
         {
@@ -54,7 +85,6 @@ public class HotBar : MonoBehaviour
                 activeSlot = firstSlot;
                 return;
             }
-
             Inventory.GetInstance().GetSlot(activeSlot + 1).GetComponent<RectTransform>().sizeDelta = new Vector2(normalSlotSize, normalSlotSize);
         } else if (direction == 0)
         {

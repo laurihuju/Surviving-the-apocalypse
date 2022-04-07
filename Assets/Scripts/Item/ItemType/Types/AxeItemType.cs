@@ -11,12 +11,22 @@ public class AxeItemType : UsableItem
 
     public override void OnCollect()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    public override void OnDeselect()
+    {
+
     }
 
     public override void OnDrop()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    public override void OnSelect()
+    {
+
     }
 
     public override void Use()

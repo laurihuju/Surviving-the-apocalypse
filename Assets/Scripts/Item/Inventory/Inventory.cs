@@ -243,6 +243,20 @@ public class Inventory : MonoBehaviour
         return space;
     }
 
+    public int GetItemAmount(int typeID)
+    {
+        int amount = 0;
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] == null)
+                continue;
+            if (items[i].GetTypeID() != typeID)
+                continue;
+            amount += items[i].GetAmount();
+        }
+        return amount;
+    }
+
     /// <summary>
     /// Tries to find a slot that has the given item and has at least 1 space left. If slot didn't found, the method tries to find an empty slot. If any slot didn't found, the method will return -1.
     /// </summary>

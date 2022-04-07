@@ -76,4 +76,14 @@ public abstract class ItemType : MonoBehaviour
     /// Called when an item of this type is dropped.
     /// </summary>
     public abstract void OnDrop();
+
+    /// <summary>
+    /// Called when an item of this type is selected in hotbar.
+    /// </summary>
+    public abstract void OnSelect();
+
+    /// <summary>
+    /// Called when an item of this type is deselected in hotbar.
+    /// </summary>
+    public abstract void OnDeselect();
 }

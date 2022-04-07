@@ -1,14 +1,24 @@
 using UnityEngine;
 
-public class TestPlaceableItem : PlaceableItem
+public class TestPlaceableItem : DefaultPlaceableItem
 {
     public override void OnCollect()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    public override void OnDeselect()
+    {
+
     }
 
     public override void OnDrop()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    public override void OnSelect()
+    {
+
     }
 }

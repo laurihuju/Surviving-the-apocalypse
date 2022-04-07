@@ -80,6 +80,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""071e037f-27b2-42fe-8462-e476bf96138c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -335,6 +344,17 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""713dad52-3135-439f-8bb5-a15e719a9d4f"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -399,6 +419,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Game_InventoryOpen = m_Game.FindAction("InventoryOpen", throwIfNotFound: true);
         m_Game_Scroll = m_Game.FindAction("Scroll", throwIfNotFound: true);
         m_Game_Use = m_Game.FindAction("Use", throwIfNotFound: true);
+        m_Game_Shift = m_Game.FindAction("Shift", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Exit = m_Menu.FindAction("Exit", throwIfNotFound: true);
@@ -467,6 +488,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_InventoryOpen;
     private readonly InputAction m_Game_Scroll;
     private readonly InputAction m_Game_Use;
+    private readonly InputAction m_Game_Shift;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -477,6 +499,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @InventoryOpen => m_Wrapper.m_Game_InventoryOpen;
         public InputAction @Scroll => m_Wrapper.m_Game_Scroll;
         public InputAction @Use => m_Wrapper.m_Game_Use;
+        public InputAction @Shift => m_Wrapper.m_Game_Shift;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -504,6 +527,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Use.started -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
                 @Use.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
                 @Use.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnUse;
+                @Shift.started -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -526,6 +552,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Use.started += instance.OnUse;
                 @Use.performed += instance.OnUse;
                 @Use.canceled += instance.OnUse;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
             }
         }
     }
@@ -571,6 +600,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnInventoryOpen(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnUse(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {

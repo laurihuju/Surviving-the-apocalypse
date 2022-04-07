@@ -14,12 +14,15 @@ public class ItemPlace : MonoBehaviour
 
     private Transform previewTransform;
     private GameObject previewBase;
+    private int previewItemID = -1;
 
     private void Start()
     {
         InputManager.GetInstance().GetInputActions().Game.Use.performed += _ => PlaceItem();
 
+        Inventory.GetInstance().AddItem(27658, 1);
         Inventory.GetInstance().AddItem(5738, 1);
+        Inventory.GetInstance().AddItem(5739, 1);
     }
 
     private void Update()
@@ -55,10 +58,21 @@ public class ItemPlace : MonoBehaviour
             return;
         }
 
-        if (previewTransform == null || previewBase == null)
+        if (previewTransform == null || previewItemID != currentItem.GetPlaceItemID())
         {
+            if (previewTransform != null)
+            {
+                Destroy(previewTransform.gameObject);
+                previewTransform = null;
+            }
+            if (previewBase != null)
+            {
+                Destroy(previewBase.gameObject);
+                previewBase = null;
+            }
             previewTransform = currentItem.PlaceItem(faceLocation, PlayerController.GetInstance().transform.rotation).transform;
             PreparePreviewItems();
+            previewItemID = currentItem.GetPlaceItemID();
             return;
         }
         Vector3 placeLocation = currentItem.GetPlaceLocation(faceLocation, PlayerController.GetInstance().transform.rotation.eulerAngles.y);
@@ -66,12 +80,14 @@ public class ItemPlace : MonoBehaviour
         if (currentItem.CanSnapNoCheck())
         {
             placeRotation = currentItem.GetSnapLocationNoCheck();
-            previewBase.SetActive(false);
+            if(previewBase != null)
+                previewBase.SetActive(false);
         }
         else
         {
             placeRotation = PlayerController.GetInstance().transform.rotation;
-            previewBase.SetActive(true);
+            if(previewBase != null)
+                previewBase.SetActive(true);
         }
         previewTransform.SetPositionAndRotation(placeLocation, placeRotation);
 
@@ -129,7 +145,8 @@ public class ItemPlace : MonoBehaviour
             placeRotation = PlayerController.GetInstance().transform.rotation;
             showBase = true;
         }
-        GroundItemManager.GetInstance().PlaceItem(placeableItem.GetTypeID(), placeLocation, placeRotation, showBase);
+        GroundItemManager.GetInstance().PlaceItem(placeableItem, placeLocation, placeRotation, showBase);
+        placeableItem.OnPlace(HotBar.GetInstance().GetActiveSlot(), false);
     }
 
     private PlaceableItem GetCurrentItem()
