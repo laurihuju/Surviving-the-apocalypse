@@ -27,10 +27,19 @@ public class ZombieController : MonoBehaviour
     [SerializeField] private float seeDistance;
     [SerializeField] private Transform eyePoint;
 
+    [Header("Attack")]
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private float attackDistance;
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private float attackDamage;
+
     private ZombieState state = ZombieState.patrol;
 
     private float patrolSwitchTime = 0;
     private Quaternion searchCheckAngle;
+
+    private float attackEnd;
+    private bool isAttacking;
 
     private enum ZombieState
     {
@@ -43,6 +52,16 @@ public class ZombieController : MonoBehaviour
 
     private void Update()
     {
+        if (isAttacking)
+        {
+            if (Time.time > attackEnd)
+            {
+                agent.isStopped = false;
+                isAttacking = false;
+            }
+            return;
+        }
+
         if (state == ZombieState.patrol)
             PatrolMove();
         else if (state == ZombieState.chase)
@@ -92,6 +111,26 @@ public class ZombieController : MonoBehaviour
         {
             state = ZombieState.check;
             return;
+        }
+
+        Collider[] targets = Physics.OverlapSphere(attackPoint.position, attackDistance);
+        if (targets.Length > 0)
+        {
+            for(int i = 0; i < targets.Length; i++)
+            {
+                if (targets[i].CompareTag("Player"))
+                {
+                    HealthManager health = targets[i].GetComponent<HealthManager>();
+                    if (health == null)
+                        break;
+                    health.ChangeHealth(-attackDamage);
+
+                    attackEnd = Time.time + attackCooldown;
+                    agent.isStopped = true;
+                    isAttacking = true;
+                    break;
+                }
+            }
         }
     }
 
