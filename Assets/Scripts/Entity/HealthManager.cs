@@ -8,10 +8,12 @@ public class HealthManager : MonoBehaviour
     [SerializeField] private float health;
 
     private HealthDisplay healthDisplay;
+    private EntityDeath death;
 
     private void Start()
     {
         healthDisplay = GetComponent<HealthDisplay>();
+        death = GetComponent<EntityDeath>();
     }
 
     /// <summary>
@@ -26,6 +28,10 @@ public class HealthManager : MonoBehaviour
             this.health = maxHealth;
         else if (this.health < 0)
             this.health = 0;
+
+        if (this.health == 0)
+            if (death != null)
+                death.OnDeath();
 
         UpdateHealthDisplay();
     }
