@@ -43,6 +43,8 @@ public class HealthManager : MonoBehaviour
     public void ChangeHealth(float changeAmount)
     {
         SetHealth(health + changeAmount);
+        if(!CompareTag("Player"))
+        Debug.Log(this.health);
     }
 
     /// <summary>

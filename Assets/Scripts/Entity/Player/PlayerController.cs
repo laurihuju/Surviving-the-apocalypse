@@ -25,6 +25,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The gravity to set to the physics system")]
     [SerializeField] private float gravity;
 
+    [Header("Animation")]
+    [SerializeField] private Animator armsAnim;
+
     private Vector2 movement;
     private Vector2 mouseMovement;
 
@@ -74,6 +77,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (movement.magnitude == 0)
+            armsAnim.SetBool("Walking", false);
+        else
+            armsAnim.SetBool("Walking", true);
+
         Vector3 newVelocity = transform.forward * movement.y * speed + transform.right * movement.x * speed;
         newVelocity[1] = rigidBody.velocity.y;
         rigidBody.velocity = newVelocity;
