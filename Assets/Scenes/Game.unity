@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 1531926975}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18376012, g: 0.22827226, b: 0.29949543, a: 1}
+  m_IndirectSpecularColor: {r: 0.18375997, g: 0.22827198, b: 0.29949477, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 5c59ef1fe8c601840b7643f4b8f307d1, type: 2}
+--- !u!1 &1833623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1833624}
+  m_Layer: 0
+  m_Name: DamagePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1833624
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833623}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.216, z: 0.684}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1653663238}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4737702
 GameObject:
   m_ObjectHideFlags: 0
@@ -3705,6 +3735,11 @@ MonoBehaviour:
   itemPrefab: {fileID: 0}
   sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   armAnimator: {fileID: 437011362}
+  damagePoint: {fileID: 1833624}
+  damageDistance: 0.4
+  damageTime: 0.6
+  damage: 3
+  cooldown: 1.2
 --- !u!114 &601573655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10486,6 +10521,7 @@ Transform:
   - {fileID: 366343542}
   - {fileID: 963194228}
   - {fileID: 581010431}
+  - {fileID: 1833624}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13918,7 +13954,6 @@ GameObject:
   - component: {fileID: 2141189008}
   - component: {fileID: 2141189007}
   - component: {fileID: 2141189006}
-  - component: {fileID: 2141189009}
   - component: {fileID: 2141189010}
   m_Layer: 0
   m_Name: Single-handed_longsword
@@ -13926,7 +13961,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &2141189006
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13990,19 +14025,6 @@ Transform:
   m_Father: {fileID: 62243917}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2141189009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2141189005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4e7bb3199cb44c429549fcb31ff0094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 5
 --- !u!136 &2141189010
 CapsuleCollider:
   m_ObjectHideFlags: 0
