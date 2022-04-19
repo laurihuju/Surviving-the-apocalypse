@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [Tooltip("The speed of the camera movement.")]
     [SerializeField] private float cameraSpeed;
+    [SerializeField] private float cameraMinRotation;
+    [SerializeField] private float cameraMaxRotation;
 
     [Header("Jump")]
     [Tooltip("The force applied on jump")]
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 movement;
     private Vector2 mouseMovement;
+
+    private float xRotation = 0;
 
     private void Awake()
     {
@@ -87,7 +91,10 @@ public class PlayerController : MonoBehaviour
         rigidBody.velocity = newVelocity;
 
         transform.Rotate(new Vector3(0, mouseMovement.x * cameraSpeed, 0));
-        Camera.main.transform.Rotate(new Vector3(mouseMovement.y * -cameraSpeed, 0, 0));
+
+        xRotation += mouseMovement.y * -cameraSpeed;
+        xRotation = Mathf.Clamp(xRotation, cameraMinRotation, cameraMaxRotation);
+        Camera.main.transform.localEulerAngles = new Vector3(xRotation, 0, 0);
     }
 
     public static PlayerController GetInstance()

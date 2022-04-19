@@ -8,6 +8,7 @@ TagManager:
   - Snapper
   - ItemBase
   - Enemy
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Water
   - UI
   - ItemSnapper
-  - 
-  - 
+  - Tree
+  - FallingTree
   - 
   - 
   - 
