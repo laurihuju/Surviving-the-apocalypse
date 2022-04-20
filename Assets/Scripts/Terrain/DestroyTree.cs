@@ -10,6 +10,8 @@ public class DestroyTree : MonoBehaviour
     public Transform upperCheckPoint;
     public Transform lowerCheckPoint;
 
+    public Transform treeBottom;
+
     private void Update()
     {
         Collider[] colliders = Physics.OverlapCapsule(upperCheckPoint.position, lowerCheckPoint.position, destroyDistanceFromCheckPoints, checkLayers);
@@ -25,7 +27,19 @@ public class DestroyTree : MonoBehaviour
 
     private void RemoveTree()
     {
-        GroundItemManager.GetInstance().AddGroundItem(dropItemType, dropItemAmount, transform.position);
+        GroundItemManager.GetInstance().AddSeparateGroundItemsItems(dropItemType, GetDropLocations());
         Destroy(gameObject);
+    }
+
+    private Vector3[] GetDropLocations()
+    {
+        float dropDistance = (lowerCheckPoint.localPosition.y - treeBottom.localPosition.y) / dropItemAmount;
+
+        Vector3[] dropLocations = new Vector3[dropItemAmount];
+        for(int i = 0; i < dropItemAmount; i++)
+        {
+            dropLocations[i] = treeBottom.transform.position + transform.up * dropDistance * i;
+        }
+        return dropLocations;
     }
 }

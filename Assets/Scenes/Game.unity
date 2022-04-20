@@ -11834,12 +11834,11 @@ MonoBehaviour:
   treeFallForce: 200
   fallingTreeMass: 1000
   fallingTreeLayer: 8
-  fallingTreeDestroyDistance: 0.5
   fallingCheckLayers:
     serializedVersion: 2
     m_Bits: 1
   dropItemType: 35796
-  itemDropAmount: 5
+  itemDropAmount: 11
 --- !u!114 &1826246055
 MonoBehaviour:
   m_ObjectHideFlags: 0

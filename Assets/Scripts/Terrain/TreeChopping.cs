@@ -94,6 +94,10 @@ public class TreeChopping : MonoBehaviour
             destroyTreeUpperCheckPoint.parent = upperTree.transform;
             destroyTreeUpperCheckPoint.localPosition = upperCollider.center + Vector3.up * (upperCollider.height / 2);
             destroyTree.upperCheckPoint = destroyTreeUpperCheckPoint;
+            Transform destroyTreeBottomPoint = new GameObject().transform;
+            destroyTreeBottomPoint.parent = upperTree.transform;
+            destroyTreeBottomPoint.localPosition = upperCollider.center + Vector3.down * (upperCollider.height / 2);
+            destroyTree.treeBottom = destroyTreeBottomPoint;
             destroyTree.destroyDistanceFromCheckPoints = upperCollider.radius + 0.01f;
             destroyTree.checkLayers = fallingCheckLayers;
 
