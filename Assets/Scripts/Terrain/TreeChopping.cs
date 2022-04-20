@@ -18,7 +18,6 @@ public class TreeChopping : MonoBehaviour
     [SerializeField] private float treeFallForce;
     [SerializeField] private float fallingTreeMass;
     [SerializeField] private int fallingTreeLayer;
-    [SerializeField] private float fallingTreeDestroyDistance;
     [SerializeField] private LayerMask fallingCheckLayers;
 
     [Header("Tree drops")]
@@ -75,6 +74,7 @@ public class TreeChopping : MonoBehaviour
             upperTree.layer = fallingTreeLayer;
 
             Rigidbody upperRb = upperTree.AddComponent<Rigidbody>();
+            upperRb.constraints = RigidbodyConstraints.FreezeRotationY;
             upperRb.mass = fallingTreeMass;
             upperRb.AddForce(Vector3.Normalize(treePosition - PlayerController.GetInstance().transform.position) * treeFallForce, ForceMode.Impulse);
             
