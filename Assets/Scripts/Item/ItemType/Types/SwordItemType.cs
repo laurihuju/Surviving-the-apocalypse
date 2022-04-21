@@ -4,16 +4,16 @@ using UnityEngine;
 public class SwordItemType : UsableItem
 {
     [Header("Animation")]
-    [SerializeField] private Animator armAnimator;
+    [SerializeField] protected Animator armAnimator;
 
     [Header("Sword")]
-    [SerializeField] private Transform damagePoint;
-    [SerializeField] private float damageDistance;
-    [SerializeField] private float damageTime;
-    [SerializeField] private float damage;
-    [SerializeField] private float cooldown;
+    [SerializeField] protected Transform damagePoint;
+    [SerializeField] protected float damageDistance;
+    [SerializeField] protected float damageTime;
+    [SerializeField] protected float damage;
+    [SerializeField] protected float cooldown;
 
-    private float nextAttackTime = 0;
+    protected float nextAttackTime = 0;
 
     public override bool CanUse()
     {

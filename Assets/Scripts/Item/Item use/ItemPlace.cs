@@ -22,7 +22,7 @@ public class ItemPlace : MonoBehaviour
 
         Inventory.GetInstance().AddItem(27658, 1);
         Inventory.GetInstance().AddItem(5738, 1);
-        Inventory.GetInstance().AddItem(5739, 1);
+        Inventory.GetInstance().AddItem(24695, 1);
         Inventory.GetInstance().AddItem(35789, 1);
     }
 

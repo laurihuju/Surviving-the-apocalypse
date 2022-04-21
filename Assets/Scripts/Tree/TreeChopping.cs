@@ -10,6 +10,9 @@ public class TreeChopping : MonoBehaviour
     public Terrain terrain;
     public Transform testChopPoint;
 
+    [Header("Chop checking")]
+    [SerializeField] private float maxTreeCheckDistance;
+
     [Header("Slicing")]
     [SerializeField] private float sliceHeight;
     [SerializeField] private Material treeMaterial;
@@ -33,7 +36,7 @@ public class TreeChopping : MonoBehaviour
         }
         instance = this;
 
-        StartCoroutine(Testi());
+        //StartCoroutine(Testi());
     }
 
     private IEnumerator Testi()
@@ -42,23 +45,38 @@ public class TreeChopping : MonoBehaviour
         ChopTree(terrain, testChopPoint.position);
     }
 
-    public void ChopTree(Terrain terrain, Vector3 position)
+    public TreeInstance GetTreeNearPosition(Terrain terrain, Vector3 position)
     {
         if (position.y < terrain.SampleHeight(position) + 0.2f)
-            return;
+            return new TreeInstance();
 
         TreeInstance[] treeInstances = terrain.terrainData.treeInstances;
-        for(int i = 0; i < treeInstances.Length; i++)
+        for (int i = 0; i < treeInstances.Length; i++)
         {
             //Check if the current tree is near to the chop position.
             Vector3 treePosition = Vector3.Scale(treeInstances[i].position, terrain.terrainData.size) + terrain.transform.position;
-            if (Mathf.Abs(treePosition.x - position.x) > 1)
+            if (Mathf.Abs(treePosition.x - position.x) > maxTreeCheckDistance)
                 continue;
-            if (Mathf.Abs(treePosition.z - position.z) > 1)
+            if (Mathf.Abs(treePosition.z - position.z) > maxTreeCheckDistance)
                 continue;
+            return treeInstances[i];
+        }
+        return new TreeInstance();
+    }
+
+    public void ChopTree(Terrain terrain, Vector3 exactTreePosition)
+    {
+        TreeInstance[] treeInstances = terrain.terrainData.treeInstances;
+        for(int i = 0; i < treeInstances.Length; i++)
+        {
+            //Check if the current tree is in the chop position.
+            if (treeInstances[i].position != exactTreePosition)
+                continue;
+            Vector3 treePosition = Vector3.Scale(treeInstances[i].position, terrain.terrainData.size) + terrain.transform.position;
 
             //Find the prefab and collider of the tree to chop and slice the tree.
             GameObject treePrefab = terrain.terrainData.treePrototypes[treeInstances[i].prototypeIndex].prefab;
+            treePrefab.transform.position = treePosition;
             CapsuleCollider treeCollider = treePrefab.GetComponent<CapsuleCollider>();
             if (treeCollider == null)
                 continue;

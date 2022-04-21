@@ -606,7 +606,7 @@ MonoBehaviour:
   itemTypeID: 5739
   stackSize: 1
   itemPrefab: {fileID: 3372855798930527899, guid: e0bf78accc064c046866af1245823e53, type: 3}
-  sprite: {fileID: 21300000, guid: 584ce07ef79fb3049b4485e0fc45ca82, type: 3}
+  sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   objectWidth: 1
   objectHeight: 1
   maxPlaceHeight: 0.5
@@ -4813,6 +4813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 808836980}
   - component: {fileID: 808836981}
+  - component: {fileID: 808836982}
   m_Layer: 0
   m_Name: Axe item type
   m_TagString: Untagged
@@ -4850,6 +4851,32 @@ MonoBehaviour:
   stackSize: 1
   itemPrefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: 584ce07ef79fb3049b4485e0fc45ca82, type: 3}
+  armAnimator: {fileID: 437011362}
+  damagePoint: {fileID: 1833624}
+  damageDistance: 0
+  damageTime: 0
+  damage: 0
+  cooldown: 1
+  chopDistance: 1
+  treeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  treeDamage: 1
+  treeHP: 5
+  treeHealSpeed: 0.05
+--- !u!114 &808836982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808836979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9797c466b9005e34abf707e15f45a612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemGameObject: {fileID: 2141189005}
 --- !u!1 &833594204
 GameObject:
   m_ObjectHideFlags: 0
@@ -11829,6 +11856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1128103837}
   testChopPoint: {fileID: 681749839}
+  maxTreeCheckDistance: 1.5
   sliceHeight: 1.5
   treeMaterial: {fileID: 2100000, guid: 6b7f736d12caf9240b8e9b479342a281, type: 2}
   treeFallForce: 200
