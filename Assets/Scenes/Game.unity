@@ -4868,7 +4868,7 @@ MonoBehaviour:
   damageTime: 0
   damage: 0
   cooldown: 1
-  chopDistance: 1
+  chopDistance: 0.3
   treeLayers:
     serializedVersion: 2
     m_Bits: 128
