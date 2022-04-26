@@ -89,7 +89,10 @@ public class TreeChopping : MonoBehaviour
 
             CapsuleCollider lowerCollider = lowerTree.AddComponent<CapsuleCollider>();
             lowerCollider.center = new Vector3(treeCollider.center.x, (treeBottomHeight + realSliceHeight / 2) - lowerTree.transform.position.y, treeCollider.center.z);
-            lowerCollider.radius = treeCollider.radius;
+            if (treeCollider.radius * 2 <= realSliceHeight)
+                lowerCollider.radius = treeCollider.radius;
+            else
+                lowerCollider.radius = realSliceHeight / 2;
             lowerCollider.height = realSliceHeight;
 
             //Upper tree spawning

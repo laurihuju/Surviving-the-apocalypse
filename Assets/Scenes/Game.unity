@@ -11936,7 +11936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1128103837}
   testChopPoint: {fileID: 681749839}
-  maxTreeCheckDistance: 1.5
+  maxTreeCheckDistance: 2
   sliceHeight: 1.5
   treeMaterial: {fileID: 2100000, guid: 6b7f736d12caf9240b8e9b479342a281, type: 2}
   treeFallForce: 200
