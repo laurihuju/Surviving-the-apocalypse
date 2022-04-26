@@ -82,9 +82,16 @@ public class TreeChopping : MonoBehaviour
                 continue;
             SlicedHull slicedTree = treePrefab.Slice(treePosition + Vector3.up * sliceHeight, Vector3.up);
 
-            //Lower tree spawning
-            slicedTree.CreateLowerHull(treePrefab, treeMaterial).AddComponent<CapsuleCollider>();
-            
+            //Lower tree spawning and settings
+            GameObject lowerTree = slicedTree.CreateLowerHull(treePrefab, treeMaterial);
+            float treeBottomHeight = lowerTree.transform.position.y + treeCollider.center.y - treeCollider.height / 2;
+            float realSliceHeight = treePosition.y + sliceHeight - treeBottomHeight;
+
+            CapsuleCollider lowerCollider = lowerTree.AddComponent<CapsuleCollider>();
+            lowerCollider.center = new Vector3(treeCollider.center.x, (treeBottomHeight + realSliceHeight / 2) - lowerTree.transform.position.y, treeCollider.center.z);
+            lowerCollider.radius = treeCollider.radius;
+            lowerCollider.height = realSliceHeight;
+
             //Upper tree spawning
             GameObject upperTree = slicedTree.CreateUpperHull(treePrefab, treeMaterial);
 
@@ -95,11 +102,11 @@ public class TreeChopping : MonoBehaviour
             upperRb.constraints = RigidbodyConstraints.FreezeRotationY;
             upperRb.mass = fallingTreeMass;
             upperRb.AddForce(Vector3.Normalize(treePosition - PlayerController.GetInstance().transform.position) * treeFallForce, ForceMode.Impulse);
-            
+
             CapsuleCollider upperCollider = upperTree.AddComponent<CapsuleCollider>();
-            upperCollider.center = treeCollider.center + Vector3.up * (sliceHeight / 2);
+            upperCollider.center = treeCollider.center + Vector3.up * (realSliceHeight / 2);
             upperCollider.radius = treeCollider.radius;
-            upperCollider.height = treeCollider.height - sliceHeight;
+            upperCollider.height = treeCollider.height - realSliceHeight;
 
             DestroyTree destroyTree = upperTree.AddComponent<DestroyTree>();
             destroyTree.dropItemType = dropItemType;
