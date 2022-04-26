@@ -9,6 +9,8 @@ public class MeleeManager : MonoBehaviour
     private MeleeItem currentItem;
     private MeleeItem previousItem;
 
+    private bool isTakingItem = false;
+
     private void Start()
     {
         if(instance != null)
@@ -21,12 +23,17 @@ public class MeleeManager : MonoBehaviour
 
     public void SetItem(ItemType type)
     {
-        if(type == null)
+        bool alreadyTakingItem = isTakingItem;
+        isTakingItem = true;
+        if (type == null)
         {
             if(currentItem != null)
             {
-                armAnimator.SetTrigger("TakeItem");
-                previousItem = currentItem;
+                if (!alreadyTakingItem)
+                {
+                    armAnimator.SetTrigger("TakeItem");
+                    previousItem = currentItem;
+                }
                 currentItem = null;
             }
             return;
@@ -36,20 +43,27 @@ public class MeleeManager : MonoBehaviour
         {
             if (currentItem != null)
             {
-                armAnimator.SetTrigger("TakeItem");
-                previousItem = currentItem;
+                if (!alreadyTakingItem)
+                {
+                    armAnimator.SetTrigger("TakeItem");
+                    previousItem = currentItem;
+                }
                 currentItem = null;
             }
             return;
         }
 
-        armAnimator.SetTrigger("TakeItem");
-        previousItem = currentItem;
+        if (!alreadyTakingItem)
+        {
+            armAnimator.SetTrigger("TakeItem");
+            previousItem = currentItem;
+        }
         currentItem = item;
     }
 
     public void AnimationChangeItem()
     {
+        isTakingItem = false;
         if (previousItem != null)
             previousItem.GetGameObject().SetActive(false);
 
