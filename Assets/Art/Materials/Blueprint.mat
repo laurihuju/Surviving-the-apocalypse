@@ -50,5 +50,5 @@ Material:
     m_Colors:
     - Color_ca07d71d742043db9e5717986efe39d5: {r: 0.24375212, g: 0.5703613, b: 0.7735849, a: 0}
     - Color_fc4ea5ff156b4a6c87c0265818151fba: {r: 1, g: 0, b: 0, a: 1}
-    - _GlowColor: {r: 0.9245283, g: 0.23898178, b: 0.23898178, a: 1}
+    - _GlowColor: {r: 0.2721253, g: 0.76915205, b: 0.9811321, a: 1}
   m_BuildTextureStacks: []

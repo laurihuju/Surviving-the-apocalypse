@@ -29,6 +29,7 @@ public class DefaultPlaceableItem : PlaceableItem
     [SerializeField] protected bool removeFromInventory;
 
     protected Vector3 placementCheckOffset;
+    protected Vector3 placementOffset;
     protected Vector3 placementCheckSize;
 
     protected bool canPlace;
@@ -38,6 +39,16 @@ public class DefaultPlaceableItem : PlaceableItem
     {
         placementCheckOffset = new Vector3(objectWidth / 2, objectHeight / 2, objectWidth / -2);
         placementCheckSize = new Vector3(objectWidth / 2 - 0.01f, objectHeight / 2 - 0.01f, objectWidth / 2 - 0.01f);
+
+        placementOffset = placementCheckOffset;
+        for (int i = 0; i < objectPrefab.transform.childCount; i++)
+        {
+            Transform child = objectPrefab.transform.GetChild(i);
+            if (!child.CompareTag("ObjectCenter"))
+                continue;
+            placementOffset = placementCheckOffset + (transform.position - child.transform.position);
+            break;
+        }
     }
 
     public override bool CanPlaceNoCheck()
@@ -71,7 +82,7 @@ public class DefaultPlaceableItem : PlaceableItem
             else if (requireSnapper)
             {
                 canPlace = false;
-                return location + Quaternion.Euler(0, yRotation, 0) * placementCheckOffset;
+                return location + Quaternion.Euler(0, yRotation, 0) * placementOffset;
             }
         }
 
@@ -89,24 +100,24 @@ public class DefaultPlaceableItem : PlaceableItem
                 if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, 0), Vector3.down, maxPlaceHeight))
                 {
                     canPlace = false;
-                    return location + rotation * placementCheckOffset;
+                    return location + rotation * placementOffset;
                 }
                 if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(0, 0, -objectWidth), Vector3.down, maxPlaceHeight))
                 {
                     canPlace = false;
-                    return location + rotation * placementCheckOffset;
+                    return location + rotation * placementOffset;
                 }
                 if (!Physics.Raycast(location + Vector3.up * y + rotation * new Vector3(objectWidth, 0, -objectWidth), Vector3.down, maxPlaceHeight))
                 {
                     canPlace = false;
-                    return location + rotation * placementCheckOffset;
+                    return location + rotation * placementOffset;
                 }
             }
             canPlace = true;
-            return checkLocation;
+            return location + Vector3.up * y + rotation * placementOffset;
         }
         canPlace = false;
-        return location + rotation * placementCheckOffset;
+        return location + rotation * placementOffset;
     }
 
     public override bool CanSnapNoCheck()

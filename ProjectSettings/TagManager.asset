@@ -9,6 +9,7 @@ TagManager:
   - ItemBase
   - Enemy
   - Terrain
+  - ObjectCenter
   layers:
   - Default
   - TransparentFX
