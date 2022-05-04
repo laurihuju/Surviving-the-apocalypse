@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,6 +7,9 @@ public class CraftingRecipe
     [SerializeField] private int[] requireItemTypes;
     [Tooltip("The item amounts of Item Types in the other array to require for recipe use.")]
     [SerializeField] private int[] requireItemAmounts;
+
+    [SerializeField] private int craftingType;
+    [SerializeField] private int craftingAmount;
 
     public bool CanCraft()
     {
@@ -30,5 +31,15 @@ public class CraftingRecipe
     public int[] GetRequireItemAmounts()
     {
         return requireItemAmounts;
+    }
+
+    public int GetCraftingType()
+    {
+        return craftingType;
+    }
+
+    public int GetCraftingAmount()
+    {
+        return craftingAmount;
     }
 }

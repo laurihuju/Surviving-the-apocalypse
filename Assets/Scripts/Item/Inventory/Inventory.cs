@@ -43,7 +43,10 @@ public class Inventory : MonoBehaviour
         {
             int slot = FindSlotForItem(type);
             if (slot == -1)
+            {
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
                 return addedAmount;
+            }
             if (items[slot] == null)
             {
                 items[slot] = new ItemStack(typeID);
@@ -55,6 +58,7 @@ public class Inventory : MonoBehaviour
             {
                 items[slot].SetAmount(items[slot].GetAmount() + amount);
                 slots[slot].SetSlotAmountText(items[slot].GetAmount());
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
                 return addedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() + maxAmountToAdd);
@@ -62,6 +66,7 @@ public class Inventory : MonoBehaviour
             amount -= maxAmountToAdd;
             addedAmount += maxAmountToAdd;
         }
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
         return addedAmount;
     }
 
@@ -82,7 +87,10 @@ public class Inventory : MonoBehaviour
         {
             int slot = FindSlotWithItem(type);
             if (slot == -1)
+            {
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
                 return removedAmount;
+            }
 
             int maxAmountToRemove = items[slot].GetAmount();
             if(maxAmountToRemove >= amount)
@@ -94,6 +102,7 @@ public class Inventory : MonoBehaviour
                     items[slot] = null;
                     slots[slot].SetSlotImage(null);
                 }
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
                 return removedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
@@ -106,6 +115,7 @@ public class Inventory : MonoBehaviour
             amount -= maxAmountToRemove;
             removedAmount += maxAmountToRemove;
         }
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
         return removedAmount;
     }
 
@@ -130,6 +140,7 @@ public class Inventory : MonoBehaviour
                 items[slot] = null;
                 slots[slot].SetSlotImage(null);
             }
+            CraftingMenu.GetInstance().UpdateCanCraftInSlots();
             return amount;
         }
         items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
@@ -139,6 +150,7 @@ public class Inventory : MonoBehaviour
             items[slot] = null;
             slots[slot].SetSlotImage(null);
         }
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
         return maxAmountToRemove;
     }
 
@@ -150,6 +162,7 @@ public class Inventory : MonoBehaviour
         slots[slot].SetSlotImage(null);
         slots[slot].SetSlotAmountText(0);
 
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
         return removedStack;
     }
 

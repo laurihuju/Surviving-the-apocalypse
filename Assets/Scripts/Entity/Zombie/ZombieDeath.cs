@@ -6,6 +6,6 @@ public class ZombieDeath : MonoBehaviour, EntityDeath
     {
         ZombieManager.GetInstance().SpawnRandomDrops(transform.position);
 
-        Destroy(gameObject);
+        ZombieManager.GetInstance().DespawnZombie(GetComponent<ZombieController>());
     }
 }

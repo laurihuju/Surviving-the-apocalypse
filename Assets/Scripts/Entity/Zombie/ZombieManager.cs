@@ -62,7 +62,7 @@ public class ZombieManager : MonoBehaviour
         nextDespawnCheck = Time.time + despawnCheckTime;
     }
 
-    private void DespawnZombie(ZombieController zombie)
+    public void DespawnZombie(ZombieController zombie)
     {
         Destroy(zombie.gameObject);
         zombies.Remove(zombie);
