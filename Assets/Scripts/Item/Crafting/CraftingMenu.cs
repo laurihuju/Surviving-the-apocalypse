@@ -91,15 +91,16 @@ public class CraftingMenu : MonoBehaviour
 
         UpdateCraftButtonPosition();
 
-        if (selectedSlot != recipeIndex)
-            return;
-        selectedSlot = 0;
-        bool canCraft = recipes[0].CanCraft();
-        slots[0].SetSelection(GetSlotSprite(true, canCraft));
+        if (selectedSlot >= recipeIndex)
+        {
+            selectedSlot--;
+            bool canCraft = recipes[selectedSlot].CanCraft();
+            slots[selectedSlot].SetSelection(GetSlotSprite(true, canCraft));
 
-        UpdateCraftButtonSprites(canCraft);
+            UpdateCraftButtonSprites(canCraft);
 
-        UpdateRequiredItemsDisplay(recipes[selectedSlot]);
+            UpdateRequiredItemsDisplay(recipes[selectedSlot]);
+        }
     }
 
     public void UpdateCanCraftInSlots(int itemTypeUsedInRecipe)
