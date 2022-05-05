@@ -45,6 +45,7 @@ public class Inventory : MonoBehaviour
             if (slot == -1)
             {
                 CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return addedAmount;
             }
             if (items[slot] == null)
@@ -59,6 +60,7 @@ public class Inventory : MonoBehaviour
                 items[slot].SetAmount(items[slot].GetAmount() + amount);
                 slots[slot].SetSlotAmountText(items[slot].GetAmount());
                 CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return addedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() + maxAmountToAdd);
@@ -67,6 +69,7 @@ public class Inventory : MonoBehaviour
             addedAmount += maxAmountToAdd;
         }
         CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return addedAmount;
     }
 
@@ -89,6 +92,7 @@ public class Inventory : MonoBehaviour
             if (slot == -1)
             {
                 CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return removedAmount;
             }
 
@@ -103,6 +107,7 @@ public class Inventory : MonoBehaviour
                     slots[slot].SetSlotImage(null);
                 }
                 CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return removedAmount + amount;
             }
             items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
@@ -116,6 +121,7 @@ public class Inventory : MonoBehaviour
             removedAmount += maxAmountToRemove;
         }
         CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return removedAmount;
     }
 
@@ -141,6 +147,7 @@ public class Inventory : MonoBehaviour
                 slots[slot].SetSlotImage(null);
             }
             CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+            BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
             return amount;
         }
         items[slot].SetAmount(items[slot].GetAmount() - maxAmountToRemove);
@@ -151,6 +158,7 @@ public class Inventory : MonoBehaviour
             slots[slot].SetSlotImage(null);
         }
         CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return maxAmountToRemove;
     }
 
@@ -163,6 +171,7 @@ public class Inventory : MonoBehaviour
         slots[slot].SetSlotAmountText(0);
 
         CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return removedStack;
     }
 

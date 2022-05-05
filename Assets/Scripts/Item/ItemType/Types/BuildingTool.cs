@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class BuildingTool : PlaceableItem
 {
+    private static BuildingTool instance;
+
     [Header("Building Tool")]
     [Tooltip("The building tool menu GameObject.")]
     [SerializeField] private GameObject buildingToolMenu;
@@ -14,10 +16,25 @@ public class BuildingTool : PlaceableItem
     [SerializeField] private PlaceableItem[] buildingItemTypes;
     [SerializeField] private CraftingRecipe[] buildingItemRecipes;
 
+    [Header("Required Items Display")]
+    [SerializeField] private GameObject requiredItemSlotPrefab;
+    [SerializeField] private Transform requiredItemSlotsParent;
+    [SerializeField] private Sprite canCraftRequiredItemSlotSprite;
+    [SerializeField] private Sprite cannotCraftRequiredItemSlotSprite;
+
     private int selectedItem = 0;
 
     private bool shiftPressed = false;
 
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
     private void Start()
     {
         InputManager.GetInstance().GetInputActions().Game.Scroll.performed += context => MoveSelection(context.ReadValue<float>());
@@ -29,6 +46,8 @@ public class BuildingTool : PlaceableItem
 
     private void MoveSelection(float direction)
     {
+        if (!buildingToolMenu.activeSelf)
+            return;
         if (!shiftPressed)
             return;
 
@@ -84,6 +103,31 @@ public class BuildingTool : PlaceableItem
             selectionSlots[i].gameObject.SetActive(true);
             selectionSlots[i].sprite = buildingItemTypes[slotItem].GetSprite();
         }
+
+        UpdateRequiredItemsDisplay();
+    }
+
+    public void UpdateRequiredItemsDisplay()
+    {
+        if (!buildingToolMenu.activeSelf)
+            return;
+
+        foreach (Transform child in requiredItemSlotsParent)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < buildingItemRecipes[selectedItem].GetRequireItemTypes().Length; i++)
+        {
+            RequiredItemSlot slot = Instantiate(requiredItemSlotPrefab, requiredItemSlotsParent).GetComponent<RequiredItemSlot>();
+
+            ItemType type = ItemTypeManager.GetInstance().GetItemType(buildingItemRecipes[selectedItem].GetRequireItemTypes()[i]);
+            if (type == null)
+                continue;
+
+            slot.SetImage(type.GetSprite());
+            slot.SetAmount(buildingItemRecipes[selectedItem].GetRequireItemAmounts()[i]);
+
+            slot.SetSlotImage(Inventory.GetInstance().GetItemAmount(buildingItemRecipes[selectedItem].GetRequireItemTypes()[i]) < buildingItemRecipes[selectedItem].GetRequireItemAmounts()[i] ? cannotCraftRequiredItemSlotSprite : canCraftRequiredItemSlotSprite);
+        }
     }
 
     public override void OnCollect()
@@ -104,6 +148,7 @@ public class BuildingTool : PlaceableItem
     public override void OnSelect()
     {
         buildingToolMenu.SetActive(true);
+        UpdateRequiredItemsDisplay();
     }
 
     public override bool CanPlaceNoCheck()
@@ -145,5 +190,10 @@ public class BuildingTool : PlaceableItem
             Inventory.GetInstance().RemoveItem(buildingItemRecipes[selectedItem].GetRequireItemTypes()[i], buildingItemRecipes[selectedItem].GetRequireItemAmounts()[i]);
         }
         buildingItemTypes[selectedItem].OnPlace(slot, true);
+    }
+
+    public static BuildingTool GetInstance()
+    {
+        return instance;
     }
 }

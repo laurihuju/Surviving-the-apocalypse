@@ -33,7 +33,7 @@ namespace Menu
         /// <summary>
         /// Hides the page and calls MenuSystem's PageHidden() method. Called when the fade out animation is complete.
         /// </summary>
-        public void HideAnimationEnded()
+        public void MenuPageHideAnimationEnded()
         {
             gameObject.SetActive(false);
             MenuSystem.GetInstance().PageHidden();

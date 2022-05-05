@@ -4,6 +4,11 @@ public class CraftingStation : MonoBehaviour
 {
     [SerializeField] private CraftingRecipe[] recipes;
 
+    [Header("Hint")]
+    [SerializeField] private string hintText;
+
+    private Hint currentHint;
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player"))
@@ -13,6 +18,9 @@ public class CraftingStation : MonoBehaviour
         {
             CraftingMenu.GetInstance().AddRecipe(recipes[i]);
         }
+
+        if(currentHint == null)
+            currentHint = HintSystem.GetInstance().ShowHint(hintText);
     }
 
     private void OnTriggerExit(Collider other)
@@ -24,5 +32,7 @@ public class CraftingStation : MonoBehaviour
         {
             CraftingMenu.GetInstance().RemoveRecipe(recipes[i]);
         }
+        HintSystem.GetInstance().RemoveHint(currentHint);
+        currentHint = null;
     }
 }

@@ -178,6 +178,7 @@ MonoBehaviour:
     requireItemAmounts: 05000000
     craftingType: 35789
     craftingAmount: 1
+  hintText: Anvil in range
 --- !u!65 &7790789073706613946
 BoxCollider:
   m_ObjectHideFlags: 0
