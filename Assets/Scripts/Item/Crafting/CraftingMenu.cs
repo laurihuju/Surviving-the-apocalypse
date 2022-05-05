@@ -201,7 +201,9 @@ public class CraftingMenu : MonoBehaviour
                 return;
             }
         }
-        Inventory.GetInstance().AddItem(recipes[selectedSlot].GetCraftingType(), recipes[selectedSlot].GetCraftingAmount());
+        int addedAmount = Inventory.GetInstance().AddItem(recipes[selectedSlot].GetCraftingType(), recipes[selectedSlot].GetCraftingAmount());
+        if(addedAmount < recipes[selectedSlot].GetCraftingAmount())
+            GroundItemManager.GetInstance().AddGroundItem(recipes[selectedSlot].GetCraftingType(), recipes[selectedSlot].GetCraftingAmount() - addedAmount, PlayerController.GetInstance().transform.position);
 
         bool canCraftAnymore = recipes[selectedSlot].CanCraft();
         slots[selectedSlot].SetSelection(GetSlotSprite(true, canCraftAnymore));

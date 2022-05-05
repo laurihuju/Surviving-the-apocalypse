@@ -11,9 +11,13 @@ public class ItemCollect : MonoBehaviour
         if (groundItem == null)
             return;
 
+        int addedAmount = Inventory.GetInstance().AddItem(groundItem.GetTypeID(), groundItem.GetAmount());
+        if(addedAmount < groundItem.GetAmount())
+        {
+            groundItem.SetAmount(groundItem.GetAmount() - addedAmount);
+            return;
+        }
         GroundItemManager.GetInstance().UnregisterGroundItem(groundItem);
-
-        Inventory.GetInstance().AddItem(groundItem.GetTypeID(), groundItem.GetAmount());
         Destroy(gameObject);
     }
 }
