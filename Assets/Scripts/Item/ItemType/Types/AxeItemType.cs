@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AxeItemType : SwordItemType
 {
@@ -10,11 +11,24 @@ public class AxeItemType : SwordItemType
     [SerializeField] private float treeHP;
     [SerializeField] private float treeHealSpeed;
 
+    [Header("Tree Health Bar")]
+    [SerializeField] private Slider treeHealthBar;
+    [SerializeField] private float treeHealthBarLerpSpeed;
+
     private float currentTreeDamage;
     private TreeInstance currentTree;
 
     private void Update()
     {
+        if(currentTreeDamage > 0)
+        {
+            treeHealthBar.gameObject.SetActive(true);
+            treeHealthBar.value = Mathf.Lerp(treeHealthBar.value, (treeHP - currentTreeDamage) / treeHP, treeHealthBarLerpSpeed);
+        } else
+        {
+            treeHealthBar.gameObject.SetActive(false);
+            treeHealthBar.value = 1;
+        }
         HealTree();
     }
 
@@ -68,7 +82,10 @@ public class AxeItemType : SwordItemType
     private bool DamageTree(TreeInstance tree)
     {
         if (tree.position == Vector3.zero)
+        {
+            currentTreeDamage = 0;
             return false;
+        }
         if(currentTree.position != tree.position)
         {
             currentTree = tree;
@@ -76,7 +93,10 @@ public class AxeItemType : SwordItemType
         }
 
         if(currentTreeDamage + treeDamage >= treeHP)
+        {
+            currentTreeDamage = 0;
             return true;
+        }
 
         currentTreeDamage += treeDamage;
         return false;
@@ -86,7 +106,8 @@ public class AxeItemType : SwordItemType
     {
         if (currentTreeDamage == 0)
             return;
-        if(currentTreeDamage - treeHealSpeed * Time.deltaTime <= 0)
+
+        if (currentTreeDamage - treeHealSpeed * Time.deltaTime <= 0)
         {
             currentTreeDamage = 0;
             return;
