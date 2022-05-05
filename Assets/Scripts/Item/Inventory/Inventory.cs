@@ -44,7 +44,7 @@ public class Inventory : MonoBehaviour
             int slot = FindSlotForItem(type);
             if (slot == -1)
             {
-                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
                 BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return addedAmount;
             }
@@ -59,7 +59,7 @@ public class Inventory : MonoBehaviour
             {
                 items[slot].SetAmount(items[slot].GetAmount() + amount);
                 slots[slot].SetSlotAmountText(items[slot].GetAmount());
-                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
                 BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return addedAmount + amount;
             }
@@ -68,7 +68,7 @@ public class Inventory : MonoBehaviour
             amount -= maxAmountToAdd;
             addedAmount += maxAmountToAdd;
         }
-        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
         BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return addedAmount;
     }
@@ -91,7 +91,7 @@ public class Inventory : MonoBehaviour
             int slot = FindSlotWithItem(type);
             if (slot == -1)
             {
-                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
                 BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return removedAmount;
             }
@@ -106,7 +106,7 @@ public class Inventory : MonoBehaviour
                     items[slot] = null;
                     slots[slot].SetSlotImage(null);
                 }
-                CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+                CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
                 BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
                 return removedAmount + amount;
             }
@@ -120,7 +120,7 @@ public class Inventory : MonoBehaviour
             amount -= maxAmountToRemove;
             removedAmount += maxAmountToRemove;
         }
-        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeID);
         BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return removedAmount;
     }
@@ -135,6 +135,7 @@ public class Inventory : MonoBehaviour
     {
         if (items[slot] == null)
             return 0;
+        int typeInSlot = items[slot].GetTypeID();
 
         int maxAmountToRemove = items[slot].GetAmount();
         if(maxAmountToRemove >= amount)
@@ -146,7 +147,7 @@ public class Inventory : MonoBehaviour
                 items[slot] = null;
                 slots[slot].SetSlotImage(null);
             }
-            CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+            CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeInSlot);
             BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
             return amount;
         }
@@ -157,7 +158,7 @@ public class Inventory : MonoBehaviour
             items[slot] = null;
             slots[slot].SetSlotImage(null);
         }
-        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots(typeInSlot);
         BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return maxAmountToRemove;
     }
@@ -165,12 +166,11 @@ public class Inventory : MonoBehaviour
     public ItemStack RemoveAllItemsFromSlot(int slot)
     {
         ItemStack removedStack = items[slot];
-
         items[slot] = null;
         slots[slot].SetSlotImage(null);
         slots[slot].SetSlotAmountText(0);
 
-        CraftingMenu.GetInstance().UpdateCanCraftInSlots();
+        CraftingMenu.GetInstance().UpdateCanCraftInSlots(removedStack.GetTypeID());
         BuildingTool.GetInstance().UpdateRequiredItemsDisplay();
         return removedStack;
     }

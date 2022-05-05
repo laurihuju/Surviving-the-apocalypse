@@ -23,6 +23,16 @@ public class CraftingRecipe
         return true;
     }
 
+    public bool RequiresType(int typeID)
+    {
+        for(int i = 0; i < requireItemTypes.Length; i++)
+        {
+            if (requireItemTypes[i] == typeID)
+                return true;
+        }
+        return false;
+    }
+
     public int[] GetRequireItemTypes()
     {
         return requireItemTypes;

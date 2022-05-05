@@ -53,7 +53,11 @@ public class CraftingMenu : MonoBehaviour
             slot.SetAmount(recipes[i].GetCraftingAmount());
         }
 
+        bool canCraft = recipes[selectedSlot].CanCraft();
+        slots[selectedSlot].SetSelection(GetSlotSprite(true, canCraft));
+        UpdateCraftButtonSprites(canCraft);
         UpdateCraftButtonPosition();
+        UpdateRequiredItemsDisplay(recipes[selectedSlot]);
 
         craftButton.onClick.AddListener(Craft);
     }
@@ -98,10 +102,13 @@ public class CraftingMenu : MonoBehaviour
         UpdateRequiredItemsDisplay(recipes[selectedSlot]);
     }
 
-    public void UpdateCanCraftInSlots()
+    public void UpdateCanCraftInSlots(int itemTypeUsedInRecipe)
     {
         for(int i = 0; i < slots.Count; i++)
         {
+            if (!recipes[i].RequiresType(itemTypeUsedInRecipe))
+                continue;
+
             bool canCraft = recipes[i].CanCraft();
             slots[i].SetSelection(GetSlotSprite(selectedSlot == i, canCraft));
 
