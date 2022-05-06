@@ -14,6 +14,8 @@ public class AxeItemType : SwordItemType
     [Header("Tree Health Bar")]
     [SerializeField] private Slider treeHealthBar;
     [SerializeField] private float treeHealthBarLerpSpeed;
+    [SerializeField] private Image treeHealthBarFill;
+    [SerializeField] private Gradient treeHealthBarFillColor;
 
     private float currentTreeDamage;
     private TreeInstance currentTree;
@@ -24,6 +26,7 @@ public class AxeItemType : SwordItemType
         {
             treeHealthBar.gameObject.SetActive(true);
             treeHealthBar.value = Mathf.Lerp(treeHealthBar.value, (treeHP - currentTreeDamage) / treeHP, treeHealthBarLerpSpeed);
+            treeHealthBarFill.color = treeHealthBarFillColor.Evaluate(treeHealthBar.value);
         } else
         {
             treeHealthBar.gameObject.SetActive(false);
