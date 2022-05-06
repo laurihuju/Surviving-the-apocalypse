@@ -26,7 +26,7 @@ public class DayCycle : MonoBehaviour
     [Header("Other")]
     [SerializeField] private AnimationCurve ambientIntensity;
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         time += timeAddition * Time.deltaTime;
 
@@ -46,6 +46,5 @@ public class DayCycle : MonoBehaviour
 
         fogFeature.settings.color = fogColor.Evaluate(time);
         fogFeature.settings.sunColor = fogSunColor.Evaluate(time);
-        //fogFeature.settings.fogDensityPower = fogIntensity.Evaluate(time);
     }
 }
