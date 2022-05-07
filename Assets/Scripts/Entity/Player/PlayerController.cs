@@ -8,32 +8,31 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody rigidBody;
 
     [Header("Movement")]
-    [Tooltip("Maximum speed")]
-    [SerializeField] private float speed;
-    [Tooltip("The speed of the camera movement.")]
-    [SerializeField] private float cameraSpeed;
+    [Tooltip("Maximum speed")] [SerializeField] private float speed;
+    [Tooltip("The speed of the camera movement.")] [SerializeField] private float cameraSpeed;
     [SerializeField] private float cameraMinRotation;
     [SerializeField] private float cameraMaxRotation;
 
     [Header("Jump")]
-    [Tooltip("The force applied on jump")]
-    [SerializeField] private float jumpForce;
-    [Tooltip("The point where ground check is done")]
-    [SerializeField] private GameObject groundCheckPoint;
-    [Tooltip("Distance from the Ground Check Point to be grounded")]
-    [SerializeField] private float groundedDistance;
+    [Tooltip("The force applied on jump")] [SerializeField] private float jumpForce;
+    [Tooltip("The point where ground check is done")] [SerializeField] private GameObject groundCheckPoint;
+    [Tooltip("Distance from the Ground Check Point to be grounded")] [SerializeField] private float groundedDistance;
 
     [Header("Physics")]
-    [Tooltip("The gravity to set to the physics system")]
-    [SerializeField] private float gravity;
+    [Tooltip("The gravity to set to the physics system")] [SerializeField] private float gravity;
 
     [Header("Animation")]
     [SerializeField] private Animator armsAnim;
+
+    [Header("ZombieSound")]
+    [SerializeField] private float zombieSoundSendingDelay;
 
     private Vector2 movement;
     private Vector2 mouseMovement;
 
     private float xRotation = 0;
+
+    private float nextTimeToSendZombieSound = 0;
 
     private void Awake()
     {
@@ -82,9 +81,17 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (movement.magnitude == 0)
+        {
             armsAnim.SetBool("Walking", false);
-        else
+        } else
+        {
             armsAnim.SetBool("Walking", true);
+            if (Time.time > nextTimeToSendZombieSound)
+            {
+                ZombieManager.GetInstance().SendSoundToZombies(1, transform.position);
+                nextTimeToSendZombieSound = Time.time + zombieSoundSendingDelay;
+            }
+        }
 
         Vector3 newVelocity = transform.forward * movement.y * speed + transform.right * movement.x * speed;
         newVelocity[1] = rigidBody.velocity.y;

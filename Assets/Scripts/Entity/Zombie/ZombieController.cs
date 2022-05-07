@@ -27,11 +27,24 @@ public class ZombieController : MonoBehaviour
     [SerializeField] private float seeDistance;
     [SerializeField] private Transform eyePoint;
 
+    [Header("Hearing")]
+    [SerializeField] private int hearingPossibilitiesMultiplier;
+    [SerializeField] private float maximumHearingDistance;
+
     [Header("Attack")]
     [SerializeField] private Transform attackPoint;
     [SerializeField] private float attackDistance;
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackDamage;
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private float speedToSwitchRunAnim;
+    [SerializeField] private float speedToSwitchWalkAnim;
+    [SerializeField] private float angularSpeedToUseWalkAnim;
+    [SerializeField] private float walkAnimSpeedMultiplier;
+    [SerializeField] private float runAnimSpeedMultiplier;
+    [SerializeField] private float turnAnimSpeedMultiplier;
 
     private ZombieState state = ZombieState.patrol;
 
@@ -40,6 +53,9 @@ public class ZombieController : MonoBehaviour
 
     private float attackEnd;
     private bool isAttacking;
+
+    private Vector3 previousFacing;
+    private float angularVelocity;
 
     private enum ZombieState
     {
@@ -50,8 +66,15 @@ public class ZombieController : MonoBehaviour
         turn
     }
 
+    private void Start()
+    {
+        previousFacing = transform.forward;
+    }
+
     private void Update()
     {
+        CheckAngularVelocity();
+
         if (isAttacking)
         {
             if (Time.time > attackEnd)
@@ -59,6 +82,7 @@ public class ZombieController : MonoBehaviour
                 agent.isStopped = false;
                 isAttacking = false;
             }
+            HandleAnimations();
             return;
         }
 
@@ -72,6 +96,22 @@ public class ZombieController : MonoBehaviour
             SearchMove();
         else if (state == ZombieState.turn)
             TurnMove();
+
+        HandleAnimations();
+    }
+
+    public void HearSound(float volume, Vector3 worldPosition)
+    {
+        Debug.Log("!");
+        float distanceToPosition = Vector3.Distance(transform.position, worldPosition);
+        if (distanceToPosition > maximumHearingDistance)
+            return;
+
+        if (Random.Range(0, (int)((distanceToPosition * hearingPossibilitiesMultiplier) / volume) + 1) == 0)
+        {
+            agent.SetDestination(worldPosition);
+            state = ZombieState.turn;
+        }
     }
 
     private void PatrolMove()
@@ -128,6 +168,7 @@ public class ZombieController : MonoBehaviour
                     attackEnd = Time.time + attackCooldown;
                     agent.isStopped = true;
                     isAttacking = true;
+                    animator.SetTrigger("Attack");
                     break;
                 }
             }
@@ -215,7 +256,7 @@ public class ZombieController : MonoBehaviour
     private bool CanSeePlayer()
     {
         RaycastHit hit;
-        if (Physics.Raycast(eyePoint.position, PlayerController.GetInstance().transform.position - transform.position, out hit, seeDistance))
+        if (Physics.Raycast(eyePoint.position, PlayerController.GetInstance().transform.position - eyePoint.position, out hit, seeDistance))
         {
             if (hit.collider.CompareTag("Player"))
                 return true;
@@ -230,5 +271,43 @@ public class ZombieController : MonoBehaviour
         Vector3 ownPosition = transform.position;
         ownPosition.y = 0;
         return playerPosition - ownPosition;
+    }
+
+    private void HandleAnimations()
+    {
+        float agentVelocity = agent.velocity.magnitude;
+
+        if(agentVelocity > speedToSwitchRunAnim)
+        {
+            animator.SetBool("Walk", false);
+            animator.SetBool("Run", true);
+
+            animator.speed = agent.velocity.magnitude * runAnimSpeedMultiplier;
+        } else if (agentVelocity > speedToSwitchWalkAnim)
+        {
+            animator.SetBool("Walk", true);
+            animator.SetBool("Run", false);
+
+            animator.speed = agent.velocity.magnitude * walkAnimSpeedMultiplier;
+        } else if (angularVelocity > angularSpeedToUseWalkAnim)
+        {
+            animator.SetBool("Walk", true);
+            animator.SetBool("Run", false);
+
+            animator.speed = angularVelocity * turnAnimSpeedMultiplier;
+        } else
+        {
+            animator.SetBool("Walk", false);
+            animator.SetBool("Run", false);
+
+            animator.speed = 1;
+        }
+    }
+
+    private void CheckAngularVelocity()
+    {
+        Vector3 currentFacing = transform.forward;
+        angularVelocity = Vector3.Angle(currentFacing, previousFacing) / Time.deltaTime;
+        previousFacing = currentFacing;
     }
 }

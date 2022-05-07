@@ -41,11 +41,19 @@ public class ZombieManager : MonoBehaviour
 
     private void Update()
     {
-        if(Time.time > despawnCheckTime)
+        if (Time.time > despawnCheckTime)
             CheckZombieDespawn();
 
         if (Time.time > nextZombieSpawn && zombies.Count < maxZombies)
             SpawnZombie();
+    }
+
+    public void SendSoundToZombies(float volume, Vector3 worldPosition)
+    {
+        for(int i = 0; i < zombies.Count; i++)
+        {
+            zombies[i].HearSound(volume, worldPosition);
+        }
     }
 
     private void CheckZombieDespawn()

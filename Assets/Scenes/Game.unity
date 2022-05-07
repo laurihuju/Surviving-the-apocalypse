@@ -11255,6 +11255,7 @@ MonoBehaviour:
   groundedDistance: 0.5
   gravity: -15
   armsAnim: {fileID: 437011362}
+  zombieSoundSendingDelay: 0.5
 --- !u!54 &1653663240
 Rigidbody:
   m_ObjectHideFlags: 0
