@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator armsAnim;
 
     [Header("ZombieSound")]
-    [SerializeField] private float zombieSoundSendingDelay;
+    [SerializeField] private float zombieSoundSendingDelay = 0.5f;
+    [SerializeField] private float zombieSoundVolume = 1;
 
     private Vector2 movement;
     private Vector2 mouseMovement;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
             armsAnim.SetBool("Walking", true);
             if (Time.time > nextTimeToSendZombieSound)
             {
-                ZombieManager.GetInstance().SendSoundToZombies(1, transform.position);
+                ZombieManager.GetInstance().SendSoundToZombies(zombieSoundVolume, transform.position);
                 nextTimeToSendZombieSound = Time.time + zombieSoundSendingDelay;
             }
         }

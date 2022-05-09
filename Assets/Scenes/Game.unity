@@ -11256,6 +11256,7 @@ MonoBehaviour:
   gravity: -15
   armsAnim: {fileID: 437011362}
   zombieSoundSendingDelay: 0.5
+  zombieSoundVolume: 1
 --- !u!54 &1653663240
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12499,7 +12500,7 @@ MonoBehaviour:
   maxSpawnDistanceFromPlayer: 40
   minSpawnDistanceFromPlayer: 35
   maxZombies: 5
-  minSpawnTime: 15
+  minSpawnTime: 10
   maxSpawnTime: 50
   despawnDistance: 70
   despawnCheckTime: 5

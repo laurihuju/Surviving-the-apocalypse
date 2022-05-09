@@ -102,7 +102,6 @@ public class ZombieController : MonoBehaviour
 
     public void HearSound(float volume, Vector3 worldPosition)
     {
-        Debug.Log("!");
         float distanceToPosition = Vector3.Distance(transform.position, worldPosition);
         if (distanceToPosition > maximumHearingDistance)
             return;
