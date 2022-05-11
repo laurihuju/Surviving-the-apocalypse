@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieController : MonoBehaviour
+public abstract class ZombieController : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent agent;
 
@@ -31,6 +31,11 @@ public class ZombieController : MonoBehaviour
     [SerializeField] private int hearingPossibilitiesMultiplier;
     [SerializeField] private float maximumHearingDistance;
 
+    [Header("Group Joining")]
+    [SerializeField] private float groupJoiningDistance;
+    [SerializeField] private LayerMask zombieLayers;
+    [SerializeField] private GameObject groupPrefab;
+
     [Header("Attack")]
     [SerializeField] private Transform attackPoint;
     [SerializeField] private float attackDistance;
@@ -48,16 +53,47 @@ public class ZombieController : MonoBehaviour
 
     private ZombieState state = ZombieState.patrol;
 
-    private float patrolSwitchTime = 0;
-    private Quaternion searchCheckAngle;
+    private protected float patrolSwitchTime = 0;
+    private protected Quaternion searchCheckAngle;
 
-    private float attackEnd;
-    private bool isAttacking;
+    private protected float attackEnd;
+    private protected bool isAttacking;
 
-    private Vector3 previousFacing;
-    private float angularVelocity;
+    private protected Vector3 previousFacing;
+    private protected float angularVelocity;
 
-    private enum ZombieState
+    public float PatrolSpeed { get => patrolSpeed;}
+    public float PatrolPosDistance { get => patrolPosDistance;}
+    public float PatrolTurnSpeed { get => patrolTurnSpeed;}
+    public float ChaseSpeed { get => chaseSpeed;}
+    public float ChaseTurnSpeed { get => chaseTurnSpeed;}
+    public float DelayToSwitchPatrolMode { get => delayToSwitchPatrolMode;}
+    public float SearchTurnSpeed { get => searchTurnSpeed;}
+    public float SearchTurnAngleChangeDistance { get => searchTurnAngleChangeDistance;}
+    public float TurnTowardsPlayerSpeed { get => turnTowardsPlayerSpeed;}
+    public float SeeAngle { get => seeAngle;}
+    public float SeeDistance { get => seeDistance;}
+    public Transform EyePoint { get => eyePoint;}
+    public int HearingPossibilitiesMultiplier { get => hearingPossibilitiesMultiplier;}
+    public float MaximumHearingDistance { get => maximumHearingDistance;}
+    public Transform AttackPoint { get => attackPoint;}
+    public float AttackDistance { get => attackDistance;}
+    public float AttackCooldown { get => attackCooldown;}
+    public float AttackDamage { get => attackDamage;}
+    public Animator Animator { get => animator;}
+    public float SpeedToSwitchRunAnim { get => speedToSwitchRunAnim;}
+    public float SpeedToSwitchWalkAnim { get => speedToSwitchWalkAnim;}
+    public float AngularSpeedToUseWalkAnim { get => angularSpeedToUseWalkAnim;}
+    public float WalkAnimSpeedMultiplier { get => walkAnimSpeedMultiplier;}
+    public float RunAnimSpeedMultiplier { get => runAnimSpeedMultiplier;}
+    public float TurnAnimSpeedMultiplier { get => turnAnimSpeedMultiplier;}
+    public NavMeshAgent Agent { get => agent;}
+    public ZombieState State { get => state; set => state = value; }
+    public float GroupJoiningDistance { get => groupJoiningDistance;}
+    public LayerMask ZombieLayers { get => zombieLayers;}
+    public GameObject GroupPrefab { get => groupPrefab;}
+
+    public enum ZombieState
     {
         patrol,
         chase,
@@ -71,191 +107,185 @@ public class ZombieController : MonoBehaviour
         previousFacing = transform.forward;
     }
 
-    private void Update()
-    {
-        CheckAngularVelocity();
-
-        if (isAttacking)
-        {
-            if (Time.time > attackEnd)
-            {
-                agent.isStopped = false;
-                isAttacking = false;
-            }
-            HandleAnimations();
-            return;
-        }
-
-        if (state == ZombieState.patrol)
-            PatrolMove();
-        else if (state == ZombieState.chase)
-            ChaseMove();
-        else if (state == ZombieState.check)
-            CheckMove();
-        else if (state == ZombieState.search)
-            SearchMove();
-        else if (state == ZombieState.turn)
-            TurnMove();
-
-        HandleAnimations();
-    }
-
-    public void HearSound(float volume, Vector3 worldPosition)
+    public virtual void HearSound(float volume, Vector3 worldPosition)
     {
         float distanceToPosition = Vector3.Distance(transform.position, worldPosition);
-        if (distanceToPosition > maximumHearingDistance)
+        if (distanceToPosition > MaximumHearingDistance)
             return;
 
-        if (Random.Range(0, (int)((distanceToPosition * hearingPossibilitiesMultiplier) / volume) + 1) == 0)
-        {
-            agent.SetDestination(worldPosition);
-            state = ZombieState.turn;
-        }
+        if (Random.Range(0, (int)((distanceToPosition * HearingPossibilitiesMultiplier) / volume) + 1) == 0)
+            HearedSound(worldPosition);
     }
 
-    private void PatrolMove()
-    {
-        agent.speed = patrolSpeed;
-        agent.angularSpeed = patrolTurnSpeed;
+    private protected abstract void HearedSound(Vector3 position);
 
-        if (Mathf.Abs(transform.position.x - agent.destination.x) < 2 && Mathf.Abs(transform.position.z - agent.destination.z) < 2)
-            agent.SetDestination(GeneratePatrolPosition());
+    private protected virtual void PatrolMove()
+    {
+        Agent.speed = PatrolSpeed;
+        Agent.angularSpeed = PatrolTurnSpeed;
+
+        if (PatrolHasReachedDestination())
+            PatrolReachedDestination();
 
         if (IsPlayerInSightArea())
             if (CanSeePlayer())
-                state = ZombieState.chase;
+                PatrolSeePlayer();
     }
 
-    private Vector3 GeneratePatrolPosition()
-    {
-        return new Vector3(Random.Range(transform.position.x - patrolPosDistance, transform.position.x + patrolPosDistance), transform.position.y, Random.Range(transform.position.z - patrolPosDistance, transform.position.z + patrolPosDistance));
-    }
+    private protected abstract void PatrolSeePlayer();
 
-    private void ChaseMove()
-    {
-        agent.speed = chaseSpeed;
-        agent.angularSpeed = chaseTurnSpeed;
+    private protected abstract bool PatrolHasReachedDestination();
 
-        agent.SetDestination(PlayerController.GetInstance().transform.position);
+    private protected abstract void PatrolReachedDestination();
+
+    private protected virtual void ChaseMove()
+    {
+        Agent.speed = ChaseSpeed;
+        Agent.angularSpeed = ChaseTurnSpeed;
+
+        ChaseSetDestination();
 
         if (!IsPlayerInSightArea())
         {
             if (CanSeePlayer())
             {
-                state = ZombieState.turn;
+                ChaseCanSeePlayer();
                 return;
             }
         }
         if (!CanSeePlayer())
         {
-            state = ZombieState.check;
+            ChaseCannotSeePlayer();
             return;
         }
 
-        Collider[] targets = Physics.OverlapSphere(attackPoint.position, attackDistance);
+        ChaseSeePlayer();
+
+        Attack();
+    }
+
+    private protected virtual void Attack()
+    {
+        Collider[] targets = Physics.OverlapSphere(AttackPoint.position, AttackDistance);
         if (targets.Length > 0)
         {
-            for(int i = 0; i < targets.Length; i++)
+            for (int i = 0; i < targets.Length; i++)
             {
                 if (targets[i].CompareTag("Player"))
                 {
                     HealthManager health = targets[i].GetComponent<HealthManager>();
                     if (health == null)
                         break;
-                    health.ChangeHealth(-attackDamage);
+                    health.ChangeHealth(-AttackDamage);
 
-                    attackEnd = Time.time + attackCooldown;
-                    agent.isStopped = true;
+                    attackEnd = Time.time + AttackCooldown;
+                    Agent.isStopped = true;
                     isAttacking = true;
-                    animator.SetTrigger("Attack");
+                    Animator.SetTrigger("Attack");
                     break;
                 }
             }
         }
     }
 
-    private void CheckMove()
+    private protected abstract void ChaseSetDestination();
+
+    private protected abstract void ChaseCanSeePlayer();
+
+    private protected abstract void ChaseCannotSeePlayer();
+
+    private protected abstract void ChaseSeePlayer();
+
+    private protected virtual void CheckMove()
     {
-        agent.speed = chaseSpeed;
-        agent.angularSpeed = chaseTurnSpeed;
+        Agent.speed = ChaseSpeed;
+        Agent.angularSpeed = ChaseTurnSpeed;
 
         if (IsPlayerInSightArea())
         {
             if (CanSeePlayer())
             {
-                state = ZombieState.chase;
+                CheckSeePlayer();
                 return;
             }
         }
 
-        if (Mathf.Abs(transform.position.x - agent.destination.x) < agent.stoppingDistance + 0.2f && Mathf.Abs(transform.position.z - agent.destination.z) < agent.stoppingDistance + 0.2f)
+        if (CheckHasReachedDestination())
         {
-            state = ZombieState.search;
-            patrolSwitchTime = Time.time + delayToSwitchPatrolMode;
-            GenerateSearchCheckAngle();
+            CheckReachedDestination();
             return;
         }
     }
 
-    private void SearchMove()
+    private protected abstract void CheckSeePlayer();
+
+    private protected abstract bool CheckHasReachedDestination();
+
+    private protected abstract void CheckReachedDestination();
+
+    private protected virtual void SearchMove()
     {
         if (Time.time > patrolSwitchTime)
         {
-            state = ZombieState.patrol;
-            agent.isStopped = false;
+            SearchTimeEnded();
             return;
         }
 
-        agent.isStopped = true;
+        Agent.isStopped = true;
 
-        if (Mathf.Abs(transform.rotation.eulerAngles.y - searchCheckAngle.eulerAngles.y) < searchTurnAngleChangeDistance)
+        if (Mathf.Abs(transform.rotation.eulerAngles.y - searchCheckAngle.eulerAngles.y) < SearchTurnAngleChangeDistance)
             GenerateSearchCheckAngle();
-        transform.rotation = Quaternion.Slerp(transform.rotation, searchCheckAngle, searchTurnSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, searchCheckAngle, SearchTurnSpeed * Time.deltaTime);
 
         if (IsPlayerInSightArea())
         {
             if (CanSeePlayer())
             {
-                state = ZombieState.chase;
-                agent.isStopped = false;
+                SearchSeePlayer();
                 return;
             }
         }
     }
 
-    private void GenerateSearchCheckAngle()
+    private protected abstract void SearchTimeEnded();
+
+    private protected abstract void SearchSeePlayer();
+
+    private protected virtual void GenerateSearchCheckAngle()
     {
         searchCheckAngle = Quaternion.Euler(0, Random.Range(0, 361), 0);
     }
 
-    private void TurnMove()
+    private protected virtual void TurnMove()
     {
-        agent.isStopped = true;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(GetDirectionToPlayer()), turnTowardsPlayerSpeed * Time.deltaTime);
+        Agent.isStopped = true;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(GetDirectionToPlayer()), TurnTowardsPlayerSpeed * Time.deltaTime);
 
         if (!CanSeePlayer())
         {
-            state = ZombieState.check;
-            agent.isStopped = false;
+            TurnCannotSeePlayer();
             return;
         }
         if (IsPlayerInSightArea())
         {
-            state = ZombieState.chase;
-            agent.isStopped = false;
+            TurnSeePlayer();
             return;
         }
     }
 
-    private bool IsPlayerInSightArea()
+    private protected abstract void TurnCannotSeePlayer();
+
+    private protected abstract void TurnSeePlayer();
+
+    private protected virtual bool IsPlayerInSightArea()
     {
-        return Vector3.Angle(transform.forward, GetDirectionToPlayer()) <= seeAngle;
+        return Vector3.Angle(transform.forward, GetDirectionToPlayer()) <= SeeAngle;
     }
 
-    private bool CanSeePlayer()
+    private protected virtual bool CanSeePlayer()
     {
         RaycastHit hit;
-        if (Physics.Raycast(eyePoint.position, PlayerController.GetInstance().transform.position - eyePoint.position, out hit, seeDistance))
+        if (Physics.Raycast(EyePoint.position, PlayerController.GetInstance().transform.position - EyePoint.position, out hit, SeeDistance))
         {
             if (hit.collider.CompareTag("Player"))
                 return true;
@@ -263,7 +293,7 @@ public class ZombieController : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetDirectionToPlayer()
+    private protected virtual Vector3 GetDirectionToPlayer()
     {
         Vector3 playerPosition = PlayerController.GetInstance().transform.position;
         playerPosition.y = 0;
@@ -272,41 +302,43 @@ public class ZombieController : MonoBehaviour
         return playerPosition - ownPosition;
     }
 
-    private void HandleAnimations()
+    private protected virtual void HandleAnimations()
     {
-        float agentVelocity = agent.velocity.magnitude;
+        float agentVelocity = Agent.velocity.magnitude;
 
-        if(agentVelocity > speedToSwitchRunAnim)
+        if(agentVelocity > SpeedToSwitchRunAnim)
         {
-            animator.SetBool("Walk", false);
-            animator.SetBool("Run", true);
+            Animator.SetBool("Walk", false);
+            Animator.SetBool("Run", true);
 
-            animator.speed = agent.velocity.magnitude * runAnimSpeedMultiplier;
-        } else if (agentVelocity > speedToSwitchWalkAnim)
+            Animator.speed = Agent.velocity.magnitude * RunAnimSpeedMultiplier;
+        } else if (agentVelocity > SpeedToSwitchWalkAnim)
         {
-            animator.SetBool("Walk", true);
-            animator.SetBool("Run", false);
+            Animator.SetBool("Walk", true);
+            Animator.SetBool("Run", false);
 
-            animator.speed = agent.velocity.magnitude * walkAnimSpeedMultiplier;
-        } else if (angularVelocity > angularSpeedToUseWalkAnim)
+            Animator.speed = Agent.velocity.magnitude * WalkAnimSpeedMultiplier;
+        } else if (angularVelocity > AngularSpeedToUseWalkAnim)
         {
-            animator.SetBool("Walk", true);
-            animator.SetBool("Run", false);
+            Animator.SetBool("Walk", true);
+            Animator.SetBool("Run", false);
 
-            animator.speed = angularVelocity * turnAnimSpeedMultiplier;
+            Animator.speed = angularVelocity * TurnAnimSpeedMultiplier;
         } else
         {
-            animator.SetBool("Walk", false);
-            animator.SetBool("Run", false);
+            Animator.SetBool("Walk", false);
+            Animator.SetBool("Run", false);
 
-            animator.speed = 1;
+            Animator.speed = 1;
         }
     }
 
-    private void CheckAngularVelocity()
+    private protected virtual void CheckAngularVelocity()
     {
         Vector3 currentFacing = transform.forward;
         angularVelocity = Vector3.Angle(currentFacing, previousFacing) / Time.deltaTime;
         previousFacing = currentFacing;
     }
+
+    public abstract void CheckIfCanJoinGroup();
 }

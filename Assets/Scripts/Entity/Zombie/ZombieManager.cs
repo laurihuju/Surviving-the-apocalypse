@@ -23,7 +23,7 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] private int maxDropAmount;
     [SerializeField] private float maxDropDistance;
 
-    private List<ZombieController> zombies;
+    private List<SingleZombie> zombies;
     private float nextZombieSpawn;
     private float nextDespawnCheck;
 
@@ -36,12 +36,12 @@ public class ZombieManager : MonoBehaviour
         }
         instance = this;
 
-        zombies = new List<ZombieController>();
+        zombies = new List<SingleZombie>();
     }
 
     private void Update()
     {
-        if (Time.time > despawnCheckTime)
+        if (Time.time > nextDespawnCheck)
             CheckZombieDespawn();
 
         if (Time.time > nextZombieSpawn && zombies.Count < maxZombies)
@@ -70,15 +70,18 @@ public class ZombieManager : MonoBehaviour
         nextDespawnCheck = Time.time + despawnCheckTime;
     }
 
-    public void DespawnZombie(ZombieController zombie)
+    public void DespawnZombie(SingleZombie zombie)
     {
+        GroupedZombie groupedZombie = zombie.GetComponent<GroupedZombie>();
+        if (groupedZombie.enabled)
+            groupedZombie.GetGroup().RemoveZombie(groupedZombie);
         Destroy(zombie.gameObject);
         zombies.Remove(zombie);
     }
 
     private void SpawnZombie()
     {
-        zombies.Add(Instantiate(zombiePrefab, GetRandomSpawnPosition(), zombiePrefab.transform.rotation).GetComponent<ZombieController>());
+        zombies.Add(Instantiate(zombiePrefab, GetRandomSpawnPosition(), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
 
         nextZombieSpawn = Time.time + Random.Range(minSpawnTime, maxSpawnTime);
     }

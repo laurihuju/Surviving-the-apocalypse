@@ -1925,7 +1925,8 @@ GameObject:
   - component: {fileID: 5459334392457214887}
   - component: {fileID: 5459334392457214886}
   - component: {fileID: 5459334392457214889}
-  - component: {fileID: 5459334392457214882}
+  - component: {fileID: 2007867984713602979}
+  - component: {fileID: -1159108186782446931}
   - component: {fileID: 5459334392457214883}
   - component: {fileID: 5459334392457214880}
   - component: {fileID: -4440116800837289146}
@@ -2052,7 +2053,7 @@ NavMeshAgent:
   m_BaseOffset: -0.02
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5459334392457214882
+--- !u!114 &2007867984713602979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2061,7 +2062,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5459334392457214888}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b6a276d8040c4d48b9403b60ebb81fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fbe732c20854654aafd53361ca6fb01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 5459334392457214889}
@@ -2077,8 +2078,13 @@ MonoBehaviour:
   seeAngle: 60
   seeDistance: 20
   eyePoint: {fileID: 5459334393751223575}
-  hearingPossibilitiesMultiplier: 2
+  hearingPossibilitiesMultiplier: 1
   maximumHearingDistance: 10
+  groupJoiningDistance: 7
+  zombieLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
   attackPoint: {fileID: 5459334393125334615}
   attackDistance: 0.7
   attackCooldown: 2
@@ -2087,8 +2093,51 @@ MonoBehaviour:
   speedToSwitchRunAnim: 1
   speedToSwitchWalkAnim: 0.15
   angularSpeedToUseWalkAnim: 0
-  walkAnimSpeedMultiplier: 1.7857143
-  runAnimSpeedMultiplier: 0.34246576
+  walkAnimSpeedMultiplier: 1.785714
+  runAnimSpeedMultiplier: 0.3424658
+  turnAnimSpeedMultiplier: 0.015
+--- !u!114 &-1159108186782446931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5459334392457214888}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59fd9554687e7514bb052335a4447b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 5459334392457214889}
+  patrolSpeed: 0.56
+  patrolPosDistance: 40
+  patrolTurnSpeed: 120
+  chaseSpeed: 2.92
+  chaseTurnSpeed: 720
+  delayToSwitchPatrolMode: 2
+  searchTurnSpeed: 5
+  searchTurnAngleChangeDistance: 1
+  turnTowardsPlayerSpeed: 1
+  seeAngle: 60
+  seeDistance: 20
+  eyePoint: {fileID: 5459334393751223575}
+  hearingPossibilitiesMultiplier: 1
+  maximumHearingDistance: 10
+  groupJoiningDistance: 7
+  zombieLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
+  attackPoint: {fileID: 5459334393125334615}
+  attackDistance: 0.7
+  attackCooldown: 2
+  attackDamage: 5
+  animator: {fileID: -4440116800837289146}
+  speedToSwitchRunAnim: 1
+  speedToSwitchWalkAnim: 0.15
+  angularSpeedToUseWalkAnim: 0
+  walkAnimSpeedMultiplier: 1.785714
+  runAnimSpeedMultiplier: 0.3424658
   turnAnimSpeedMultiplier: 0.015
 --- !u!114 &5459334392457214883
 MonoBehaviour:
