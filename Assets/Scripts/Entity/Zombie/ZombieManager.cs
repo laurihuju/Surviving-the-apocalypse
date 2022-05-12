@@ -130,6 +130,36 @@ public class ZombieManager : MonoBehaviour
         return new Vector3(xPosition, deathPosition.y, zPosition);
     }
 
+    public SingleZombie[] GetZombiesNearPosition(Vector3 position, float maxDistance, SingleZombie zombieToNotInclude)
+    {
+        int zombieCount = 0;
+        for(int i = 0; i < zombies.Count; i++)
+        {
+            if (Vector3.Distance(zombies[i].transform.position, position) > maxDistance)
+                continue;
+            if (zombies[i] == zombieToNotInclude)
+                continue;
+            zombieCount++;
+        }
+
+        if (zombieCount == 0)
+            return null;
+
+        SingleZombie[] zombiesToReturn = new SingleZombie[zombieCount];
+        zombieCount = 0;
+        for (int i = 0; i < zombies.Count; i++)
+        {
+            if (Vector3.Distance(zombies[i].transform.position, position) > maxDistance)
+                continue;
+            if (zombies[i] == zombieToNotInclude)
+                continue;
+            zombiesToReturn[zombieCount] = zombies[i];
+            zombieCount++;
+        }
+
+        return zombiesToReturn;
+    }
+
     public static ZombieManager GetInstance()
     {
         return instance;

@@ -33,8 +33,9 @@ public abstract class ZombieController : MonoBehaviour
 
     [Header("Group Joining")]
     [SerializeField] private float groupJoiningDistance;
-    [SerializeField] private LayerMask zombieLayers;
     [SerializeField] private GameObject groupPrefab;
+    [SerializeField] private float groupJoinCheckDelay;
+    private protected float nextGroupJoinCheckTime;
 
     [Header("Attack")]
     [SerializeField] private Transform attackPoint;
@@ -90,8 +91,8 @@ public abstract class ZombieController : MonoBehaviour
     public NavMeshAgent Agent { get => agent;}
     public ZombieState State { get => state; set => state = value; }
     public float GroupJoiningDistance { get => groupJoiningDistance;}
-    public LayerMask ZombieLayers { get => zombieLayers;}
     public GameObject GroupPrefab { get => groupPrefab;}
+    public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
 
     public enum ZombieState
     {

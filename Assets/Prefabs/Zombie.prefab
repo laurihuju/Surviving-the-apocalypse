@@ -2085,6 +2085,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
+  groupJoinCheckDelay: 4
   attackPoint: {fileID: 5459334393125334615}
   attackDistance: 0.7
   attackCooldown: 2
@@ -2128,6 +2129,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
+  groupJoinCheckDelay: 4
   attackPoint: {fileID: 5459334393125334615}
   attackDistance: 0.7
   attackCooldown: 2

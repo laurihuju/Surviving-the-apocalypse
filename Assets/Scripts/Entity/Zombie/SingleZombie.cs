@@ -122,7 +122,30 @@ public class SingleZombie : ZombieController
 
     public override void CheckIfCanJoinGroup()
     {
-        Collider[] zombies = Physics.OverlapSphere(transform.position, GroupJoiningDistance, ZombieLayers);
+        if (Time.time < nextGroupJoinCheckTime)
+            return;
+        nextGroupJoinCheckTime = Time.time + GroupJoinCheckDelay;
+
+        SingleZombie[] zombies = ZombieManager.GetInstance().GetZombiesNearPosition(transform.position, GroupJoiningDistance, this);
+        if (zombies == null)
+            return;
+        for (int i = 0; i < zombies.Length; i++)
+        {
+            GroupedZombie groupedZombie = zombies[i].GetComponent<GroupedZombie>();
+            if (!groupedZombie.enabled)
+                continue;
+            groupedZombie.GetGroup().AddZombie(this);
+            return;
+        }
+        ZombieGroup newGroup = Instantiate(GroupPrefab).GetComponent<ZombieGroup>();
+        newGroup.AddZombie(this);
+        for (int i = 0; i < zombies.Length; i++)
+        {
+            newGroup.AddZombie(zombies[i]);
+        }
+
+
+        /*Collider[] zombies = Physics.OverlapSphere(transform.position, GroupJoiningDistance, ZombieLayers);
         if (zombies.Length <= 1)
             return;
         for (int i = 0; i < zombies.Length; i++)
@@ -139,6 +162,6 @@ public class SingleZombie : ZombieController
         for (int i = 0; i < zombies.Length; i++)
         {
             newGroup.AddZombie(zombies[i].GetComponent<SingleZombie>());
-        }
+        }*/
     }
 }
