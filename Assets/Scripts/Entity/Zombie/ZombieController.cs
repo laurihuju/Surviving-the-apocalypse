@@ -31,12 +31,6 @@ public abstract class ZombieController : MonoBehaviour
     [SerializeField] private int hearingPossibilitiesMultiplier;
     [SerializeField] private float maximumHearingDistance;
 
-    [Header("Group Joining")]
-    [SerializeField] private float groupJoiningDistance;
-    [SerializeField] private GameObject groupPrefab;
-    [SerializeField] private float groupJoinCheckDelay;
-    private protected float nextGroupJoinCheckTime;
-
     [Header("Attack")]
     [SerializeField] private Transform attackPoint;
     [SerializeField] private float attackDistance;
@@ -90,9 +84,6 @@ public abstract class ZombieController : MonoBehaviour
     public float TurnAnimSpeedMultiplier { get => turnAnimSpeedMultiplier;}
     public NavMeshAgent Agent { get => agent;}
     public ZombieState State { get => state; set => state = value; }
-    public float GroupJoiningDistance { get => groupJoiningDistance;}
-    public GameObject GroupPrefab { get => groupPrefab;}
-    public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
 
     public enum ZombieState
     {
@@ -340,6 +331,4 @@ public abstract class ZombieController : MonoBehaviour
         angularVelocity = Vector3.Angle(currentFacing, previousFacing) / Time.deltaTime;
         previousFacing = currentFacing;
     }
-
-    public abstract void CheckIfCanJoinGroup();
 }

@@ -5,6 +5,8 @@ public class GroupedZombie : ZombieController
     private ZombieGroup group = null;
     private int indexInGroup = -1;
 
+    [SerializeField] private SingleZombie singleZombie;
+
     private bool canSeePlayer = false;
     private bool isCheckingSound = false;
     private bool searchTimeEnded = false;
@@ -12,6 +14,7 @@ public class GroupedZombie : ZombieController
     public bool CanSeePlayer1 { get => canSeePlayer;}
     public bool SearchTimeEnded1 { get => searchTimeEnded; set => searchTimeEnded = value; }
     public int IndexInGroup { get => indexInGroup; set => indexInGroup = value; }
+    public SingleZombie SingleZombie { get => singleZombie;}
 
     private void Update()
     {
@@ -165,10 +168,5 @@ public class GroupedZombie : ZombieController
     private protected override bool CheckHasReachedDestination()
     {
         return Mathf.Abs(transform.position.x - Agent.destination.x) < Agent.stoppingDistance + 0.2f && Mathf.Abs(transform.position.z - Agent.destination.z) < Agent.stoppingDistance + 0.2f;
-    }
-
-    public override void CheckIfCanJoinGroup()
-    {
-        
     }
 }

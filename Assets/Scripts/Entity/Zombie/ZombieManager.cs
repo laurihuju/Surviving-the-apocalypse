@@ -24,6 +24,7 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] private float maxDropDistance;
 
     private List<SingleZombie> zombies;
+    private List<ZombieGroup> groups;
     private float nextZombieSpawn;
     private float nextDespawnCheck;
 
@@ -37,6 +38,13 @@ public class ZombieManager : MonoBehaviour
         instance = this;
 
         zombies = new List<SingleZombie>();
+        groups = new List<ZombieGroup>();
+
+        zombies.Add(Instantiate(zombiePrefab, new Vector3(530.1385f, 37.61845f, 365.8784f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
+        zombies.Add(Instantiate(zombiePrefab, new Vector3(532.22f, 37.61845f, 364.37f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
+
+        zombies.Add(Instantiate(zombiePrefab, new Vector3(551.8923f, 36.32074f, 360.9696f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
+        zombies.Add(Instantiate(zombiePrefab, new Vector3(551.03f, 36.32074f, 358.85f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
     }
 
     private void Update()
@@ -46,6 +54,16 @@ public class ZombieManager : MonoBehaviour
 
         if (Time.time > nextZombieSpawn && zombies.Count < maxZombies)
             SpawnZombie();
+    }
+
+    public void RegisterGroup(ZombieGroup group)
+    {
+        groups.Add(group);
+    }
+
+    public void UnRegisterGroup(ZombieGroup group)
+    {
+        groups.Remove(group);
     }
 
     public void SendSoundToZombies(float volume, Vector3 worldPosition)
@@ -158,6 +176,29 @@ public class ZombieManager : MonoBehaviour
         }
 
         return zombiesToReturn;
+    }
+
+    public ZombieGroup[] GetOtherGroupsNearPosition(Vector3 position, float maxDistance, ZombieGroup groupToNotInclude)
+    {
+        List<ZombieGroup> groupsToReturn = null;
+        for(int i = 0; i < groups.Count; i++)
+        {
+            if (groups[i] == groupToNotInclude)
+                continue;
+            for(int j = 0; j < groups[i].Zombies.Length; j++)
+            {
+                if (Vector3.Distance(groups[i].Zombies[j].transform.position, position) > maxDistance)
+                    continue;
+                if (groupsToReturn == null)
+                    groupsToReturn = new List<ZombieGroup>();
+                groupsToReturn.Add(groups[i]);
+                break;
+            }
+        }
+
+        if (groupsToReturn == null)
+            return null;
+        return groupsToReturn.ToArray();
     }
 
     public static ZombieManager GetInstance()

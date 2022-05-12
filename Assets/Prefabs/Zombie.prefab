@@ -2081,11 +2081,7 @@ MonoBehaviour:
   hearingPossibilitiesMultiplier: 1
   maximumHearingDistance: 10
   groupJoiningDistance: 7
-  zombieLayers:
-    serializedVersion: 2
-    m_Bits: 512
   groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
-  groupJoinCheckDelay: 4
   attackPoint: {fileID: 5459334393125334615}
   attackDistance: 0.7
   attackCooldown: 2
@@ -2097,6 +2093,8 @@ MonoBehaviour:
   walkAnimSpeedMultiplier: 1.785714
   runAnimSpeedMultiplier: 0.3424658
   turnAnimSpeedMultiplier: 0.015
+  groupedZombie: {fileID: -1159108186782446931}
+  groupJoinCheckDelay: 4
 --- !u!114 &-1159108186782446931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2125,11 +2123,7 @@ MonoBehaviour:
   hearingPossibilitiesMultiplier: 1
   maximumHearingDistance: 10
   groupJoiningDistance: 7
-  zombieLayers:
-    serializedVersion: 2
-    m_Bits: 512
   groupPrefab: {fileID: 6895228131657703702, guid: c1902d42e1b834145b9d02dd3d3a5e47, type: 3}
-  groupJoinCheckDelay: 4
   attackPoint: {fileID: 5459334393125334615}
   attackDistance: 0.7
   attackCooldown: 2
@@ -2141,6 +2135,7 @@ MonoBehaviour:
   walkAnimSpeedMultiplier: 1.785714
   runAnimSpeedMultiplier: 0.3424658
   turnAnimSpeedMultiplier: 0.015
+  singleZombie: {fileID: 2007867984713602979}
 --- !u!114 &5459334392457214883
 MonoBehaviour:
   m_ObjectHideFlags: 0

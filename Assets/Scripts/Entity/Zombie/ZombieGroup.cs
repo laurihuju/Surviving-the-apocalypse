@@ -12,11 +12,19 @@ public class ZombieGroup : MonoBehaviour
     [Header("Check")]
     [SerializeField] private float checkMaxDistanceFromPlayer = 5;
 
+    [Header("Group Joining")]
+    [SerializeField] private float groupJoiningDistance;
+    [SerializeField] private float groupJoinCheckDelay;
+    private protected float nextGroupJoinCheckTime;
+
     private GroupedZombie[] zombies;
 
     private ZombieGroupState state;
 
     public ZombieGroupState State { get => state; set => state = value; }
+    public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
+    public float GroupJoiningDistance { get => groupJoiningDistance;}
+    public GroupedZombie[] Zombies { get => zombies;}
 
     public enum ZombieGroupState
     {
@@ -25,10 +33,20 @@ public class ZombieGroup : MonoBehaviour
         check
     }
 
+    private void Awake()
+    {
+        ZombieManager.GetInstance().RegisterGroup(this);
+    }
+
+    private void Update()
+    {
+        CheckIfCanJoinGroup();
+    }
+
     public void CheckIfNoOneCanSeePlayer()
     {
-        for(int i = 0; i < zombies.Length; i++)
-            if (!zombies[i].CanSeePlayer1)
+        for(int i = 0; i < Zombies.Length; i++)
+            if (!Zombies[i].CanSeePlayer1)
                 return;
         state = ZombieGroupState.check;
         GenerateCheckPositions();
@@ -36,13 +54,13 @@ public class ZombieGroup : MonoBehaviour
 
     public void CheckIfEveryoneHasEndedSearch()
     {
-        for (int i = 0; i < zombies.Length; i++)
-            if (!zombies[i].SearchTimeEnded1)
+        for (int i = 0; i < Zombies.Length; i++)
+            if (!Zombies[i].SearchTimeEnded1)
                 return;
         state = ZombieGroupState.patrol;
-        for (int i = 0; i < zombies.Length; i++)
+        for (int i = 0; i < Zombies.Length; i++)
         {
-            zombies[i].Agent.isStopped = false;
+            Zombies[i].Agent.isStopped = false;
         }
 
         GeneratePatrolPositions();
@@ -50,34 +68,34 @@ public class ZombieGroup : MonoBehaviour
 
     public void GeneratePatrolPositions()
     {
-        Vector3 groupTarget = new Vector3(Random.Range(zombies[0].transform.position.x - patrolPosDistance, zombies[0].transform.position.x + patrolPosDistance), zombies[0].transform.position.y, Random.Range(zombies[0].transform.position.z - patrolPosDistance, zombies[0].transform.position.z + patrolPosDistance));
-        for (int i = 0; i < zombies.Length; i++)
+        Vector3 groupTarget = new Vector3(Random.Range(Zombies[0].transform.position.x - patrolPosDistance, Zombies[0].transform.position.x + patrolPosDistance), Zombies[0].transform.position.y, Random.Range(Zombies[0].transform.position.z - patrolPosDistance, Zombies[0].transform.position.z + patrolPosDistance));
+        for (int i = 0; i < Zombies.Length; i++)
         {
             Vector3 zombieTarget = groupTarget + Vector3.right * i * patrolPosSpread;
-            zombies[i].Agent.SetDestination(zombieTarget);
+            Zombies[i].Agent.SetDestination(zombieTarget);
         }
     }
 
     public void GenerateCheckPositions()
     {
         Vector3 playerPosition = PlayerController.GetInstance().transform.position;
-        for(int i = 0; i < zombies.Length; i++)
+        for(int i = 0; i < Zombies.Length; i++)
         {
-            zombies[i].Agent.SetDestination(playerPosition + new Vector3(Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer), 0, Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer)));
-            zombies[i].State = ZombieController.ZombieState.check;
-            zombies[i].SearchTimeEnded1 = false;
+            Zombies[i].Agent.SetDestination(playerPosition + new Vector3(Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer), 0, Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer)));
+            Zombies[i].State = ZombieController.ZombieState.check;
+            Zombies[i].SearchTimeEnded1 = false;
         }
     }
 
     public void SetZombieStates(ZombieController.ZombieState state)
     {
-        for (int i = 0; i < zombies.Length; i++)
-            zombies[i].State = state;
+        for (int i = 0; i < Zombies.Length; i++)
+            Zombies[i].State = state;
     }
 
     public Vector3 GenerateChasePosition(int zombieIndex)
     {
-        float angle = (360f / zombies.Length) * zombieIndex;
+        float angle = (360f / Zombies.Length) * zombieIndex;
         Vector3 position = PlayerController.GetInstance().transform.position + Quaternion.Euler(0, angle, 0) * Vector3.forward * chaseDistanceFromTarget;
         return position;
     }
@@ -86,24 +104,33 @@ public class ZombieGroup : MonoBehaviour
     {
         zombie.enabled = false;
 
-        GroupedZombie groupedZombie = zombie.GetComponent<GroupedZombie>();
+        GroupedZombie groupedZombie = zombie.GroupedZombie;
         if (zombies == null)
             zombies = new GroupedZombie[0];
-        groupedZombie.SetGroup(this, zombies.Length);
+        groupedZombie.SetGroup(this, Zombies.Length);
         groupedZombie.enabled = true;
 
-        GroupedZombie[] newZombies = new GroupedZombie[zombies.Length + 1];
-        for(int i = 0; i < zombies.Length; i++)
+        GroupedZombie[] newZombies = new GroupedZombie[Zombies.Length + 1];
+        for(int i = 0; i < Zombies.Length; i++)
         {
-            newZombies[i] = zombies[i];
+            newZombies[i] = Zombies[i];
         }
-        newZombies[zombies.Length] = groupedZombie;
+        newZombies[Zombies.Length] = groupedZombie;
         zombies = newZombies;
+
+        groupedZombie.Agent.isStopped = false;
+        if (state == ZombieGroupState.chase)
+        {
+            groupedZombie.State = ZombieController.ZombieState.chase;
+        } else if (state == ZombieGroupState.check)
+        {
+            groupedZombie.State = ZombieController.ZombieState.check;
+        }
     }
 
     public void RemoveZombie(GroupedZombie zombie)
     {
-        if(zombies.Length == 2)
+        if(Zombies.Length == 2)
         {
             int remainingZombie;
             if (zombie.IndexInGroup == 0)
@@ -111,26 +138,53 @@ public class ZombieGroup : MonoBehaviour
             else
                 remainingZombie = 0;
 
-            zombies[remainingZombie].enabled = false;
-            zombies[remainingZombie].GetComponent<SingleZombie>().enabled = true;
+            Zombies[remainingZombie].enabled = false;
+            Zombies[remainingZombie].GetComponent<SingleZombie>().enabled = true;
         }
 
-        if(zombies.Length <= 2)
+        if(Zombies.Length <= 2)
         {
+            ZombieManager.GetInstance().UnRegisterGroup(this);
             Destroy(gameObject);
             return;
         }
 
-        GroupedZombie[] newZombies = new GroupedZombie[zombies.Length - 1];
-        for(int i = 0; i < zombies.Length - 1; i++)
+        GroupedZombie[] newZombies = new GroupedZombie[Zombies.Length - 1];
+        for(int i = 0; i < Zombies.Length - 1; i++)
         {
             if(i < zombie.IndexInGroup)
             {
-                newZombies[i] = zombies[i];
+                newZombies[i] = Zombies[i];
                 continue;
             }
-            zombies[i + 1].IndexInGroup = i;
-            newZombies[i] = zombies[i + 1];
+            Zombies[i + 1].IndexInGroup = i;
+            newZombies[i] = Zombies[i + 1];
+        }
+        zombies = newZombies;
+    }
+
+    public void CheckIfCanJoinGroup()
+    {
+        if (Zombies == null)
+            return;
+        if (Zombies.Length == 0)
+            return;
+        if (Time.time < nextGroupJoinCheckTime)
+            return;
+        nextGroupJoinCheckTime = Time.time + GroupJoinCheckDelay;
+
+        ZombieGroup[] otherNearGroups = ZombieManager.GetInstance().GetOtherGroupsNearPosition(Zombies[0].transform.position, groupJoiningDistance, this);
+        if (otherNearGroups == null)
+            return;
+
+        for(int i = 0; i < otherNearGroups.Length; i++)
+        {
+            for(int j = 0; j < otherNearGroups[i].Zombies.Length; j++)
+            {
+                AddZombie(otherNearGroups[i].Zombies[j].SingleZombie);
+            }
+            ZombieManager.GetInstance().UnRegisterGroup(otherNearGroups[i]);
+            Destroy(otherNearGroups[i].gameObject);
         }
     }
 }

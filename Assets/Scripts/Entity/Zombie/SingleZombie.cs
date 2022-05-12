@@ -2,6 +2,19 @@ using UnityEngine;
 
 public class SingleZombie : ZombieController
 {
+    [SerializeField] private GroupedZombie groupedZombie;
+
+    [Header("Group Joining")]
+    [SerializeField] private float groupJoiningDistance;
+    [SerializeField] private GameObject groupPrefab;
+    [SerializeField] private float groupJoinCheckDelay;
+    private protected float nextGroupJoinCheckTime;
+
+    public GroupedZombie GroupedZombie { get => groupedZombie;}
+    public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
+    public float GroupJoiningDistance { get => groupJoiningDistance;}
+    public GameObject GroupPrefab { get => groupPrefab;}
+
     private void Update()
     {
         CheckAngularVelocity();
@@ -120,7 +133,7 @@ public class SingleZombie : ZombieController
         Agent.isStopped = false;
     }
 
-    public override void CheckIfCanJoinGroup()
+    public void CheckIfCanJoinGroup()
     {
         if (Time.time < nextGroupJoinCheckTime)
             return;
@@ -143,25 +156,5 @@ public class SingleZombie : ZombieController
         {
             newGroup.AddZombie(zombies[i]);
         }
-
-
-        /*Collider[] zombies = Physics.OverlapSphere(transform.position, GroupJoiningDistance, ZombieLayers);
-        if (zombies.Length <= 1)
-            return;
-        for (int i = 0; i < zombies.Length; i++)
-        {
-            if (zombies[i].gameObject.Equals(gameObject))
-                continue;
-            GroupedZombie groupedZombie = zombies[i].GetComponent<GroupedZombie>();
-            if (!groupedZombie.enabled)
-                continue;
-            groupedZombie.GetGroup().AddZombie(this);
-            return;
-        }
-        ZombieGroup newGroup = Instantiate(GroupPrefab).GetComponent<ZombieGroup>();
-        for (int i = 0; i < zombies.Length; i++)
-        {
-            newGroup.AddZombie(zombies[i].GetComponent<SingleZombie>());
-        }*/
     }
 }
