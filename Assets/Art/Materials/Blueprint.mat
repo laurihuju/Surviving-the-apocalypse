@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 4
+  version: 5
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Blueprint
   m_Shader: {fileID: -6465566751694194690, guid: 11689a6c0bfc6034195e7f035a432005, type: 3}
-  m_ShaderKeywords: 
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -44,9 +45,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - Vector1_46103d38444f489d868f3af0750df14e: 0.25
     - Vector1_8144090e031845558c1240e70daa953e: -0.2
+    - _QueueControl: 0
+    - _QueueOffset: 0
     m_Colors:
     - Color_ca07d71d742043db9e5717986efe39d5: {r: 0.24375212, g: 0.5703613, b: 0.7735849, a: 0}
     - Color_fc4ea5ff156b4a6c87c0265818151fba: {r: 1, g: 0, b: 0, a: 1}
