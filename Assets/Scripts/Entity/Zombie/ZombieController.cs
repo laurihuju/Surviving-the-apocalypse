@@ -153,8 +153,11 @@ public abstract class ZombieController : MonoBehaviour
 
         ChaseSeePlayer();
 
-        Attack();
+        if (CanAttack())
+            Attack();
     }
+
+    private protected abstract bool CanAttack();
 
     private protected virtual void Attack()
     {

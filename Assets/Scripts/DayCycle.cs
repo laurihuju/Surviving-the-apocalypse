@@ -4,6 +4,8 @@ using OD;
 
 public class DayCycle : MonoBehaviour
 {
+    private static DayCycle instance;
+
     [Header("Time settings")]
     [SerializeField] [Range(0, 1)] private float time;
     [SerializeField] private float timeAddition;
@@ -26,6 +28,16 @@ public class DayCycle : MonoBehaviour
     [Header("Other")]
     [SerializeField] private AnimationCurve ambientIntensity;
 
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
     private void LateUpdate()
     {
         time += timeAddition * Time.deltaTime;
@@ -46,5 +58,15 @@ public class DayCycle : MonoBehaviour
 
         fogFeature.settings.color = fogColor.Evaluate(time);
         fogFeature.settings.sunColor = fogSunColor.Evaluate(time);
+    }
+
+    public float GetTime()
+    {
+        return time;
+    }
+
+    public static DayCycle GetInstance()
+    {
+        return instance;
     }
 }

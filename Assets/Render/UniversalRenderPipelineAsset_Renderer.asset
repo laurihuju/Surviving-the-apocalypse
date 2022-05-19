@@ -105,8 +105,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    color: {r: 0.620385, g: 0.6471858, b: 0.6516526, a: 1}
-    sunColor: {r: 0.7306609, g: 0.50671214, b: 0.41071635, a: 1}
+    color: {r: 0.6620497, g: 0.6931584, b: 0.69809943, a: 1}
+    sunColor: {r: 0.7537926, g: 0.51626456, b: 0.41264397, a: 1}
     fogDensity: 0.01
     fogDensityPower: 0.9
     skyAlpha: 0

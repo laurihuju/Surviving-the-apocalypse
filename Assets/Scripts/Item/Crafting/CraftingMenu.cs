@@ -36,11 +36,12 @@ public class CraftingMenu : MonoBehaviour
             return;
         }
         instance = this;
+
+        slots = new List<CraftingSlot>();
     }
 
     private void Start()
     {
-        slots = new List<CraftingSlot>();
         for (int i = 0; i < recipes.Count; i++)
         {
             CraftingSlot slot = Instantiate(slotPrefab, slotParent).GetComponent<CraftingSlot>();

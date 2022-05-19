@@ -17,6 +17,12 @@ public class ZombieGroup : MonoBehaviour
     [SerializeField] private float groupJoinCheckDelay;
     private protected float nextGroupJoinCheckTime;
 
+    [Header("Light Detection")]
+    [SerializeField] private float maxAttackBrightnessStart;
+    [SerializeField] private float maxAttackBrightnessAddition;
+    [SerializeField] private float stopDistanceFromBright;
+    private float maxAttackBrightness = 0;
+
     private GroupedZombie[] zombies;
 
     private ZombieGroupState state;
@@ -25,6 +31,7 @@ public class ZombieGroup : MonoBehaviour
     public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
     public float GroupJoiningDistance { get => groupJoiningDistance;}
     public GroupedZombie[] Zombies { get => zombies;}
+    public float MaxAttackBrightness { get => maxAttackBrightness;}
 
     public enum ZombieGroupState
     {
@@ -84,6 +91,7 @@ public class ZombieGroup : MonoBehaviour
             Zombies[i].Agent.SetDestination(playerPosition + new Vector3(Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer), 0, Random.Range(-checkMaxDistanceFromPlayer, checkMaxDistanceFromPlayer)));
             Zombies[i].State = ZombieController.ZombieState.check;
             Zombies[i].SearchTimeEnded1 = false;
+            Zombies[i].Agent.isStopped = false;
         }
     }
 
@@ -96,7 +104,11 @@ public class ZombieGroup : MonoBehaviour
     public Vector3 GenerateChasePosition(int zombieIndex)
     {
         float angle = (360f / Zombies.Length) * zombieIndex;
-        Vector3 position = PlayerController.GetInstance().transform.position + Quaternion.Euler(0, angle, 0) * Vector3.forward * chaseDistanceFromTarget;
+        Vector3 position;
+        if (ZombieManager.GetInstance().PlayerLocationLightLevel > maxAttackBrightness)
+            position = PlayerController.GetInstance().transform.position + Quaternion.Euler(0, angle, 0) * Vector3.forward * stopDistanceFromBright;
+        else
+            position = PlayerController.GetInstance().transform.position + Quaternion.Euler(0, angle, 0) * Vector3.forward * chaseDistanceFromTarget;
         return position;
     }
 
@@ -117,6 +129,7 @@ public class ZombieGroup : MonoBehaviour
         }
         newZombies[Zombies.Length] = groupedZombie;
         zombies = newZombies;
+        CalculateMaxAttackBrightness();
 
         groupedZombie.Agent.isStopped = false;
         if (state == ZombieGroupState.chase)
@@ -139,7 +152,7 @@ public class ZombieGroup : MonoBehaviour
                 remainingZombie = 0;
 
             Zombies[remainingZombie].enabled = false;
-            Zombies[remainingZombie].GetComponent<SingleZombie>().enabled = true;
+            Zombies[remainingZombie].SingleZombie.enabled = true;
         }
 
         if(Zombies.Length <= 2)
@@ -161,6 +174,7 @@ public class ZombieGroup : MonoBehaviour
             newZombies[i] = Zombies[i + 1];
         }
         zombies = newZombies;
+        CalculateMaxAttackBrightness();
     }
 
     public void CheckIfCanJoinGroup()
@@ -186,5 +200,10 @@ public class ZombieGroup : MonoBehaviour
             ZombieManager.GetInstance().UnRegisterGroup(otherNearGroups[i]);
             Destroy(otherNearGroups[i].gameObject);
         }
+    }
+
+    private void CalculateMaxAttackBrightness()
+    {
+        maxAttackBrightness = maxAttackBrightnessStart + maxAttackBrightnessAddition * (zombies.Length - 1);
     }
 }

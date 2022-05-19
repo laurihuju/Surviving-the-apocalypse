@@ -94,6 +94,13 @@ public class GroupedZombie : ZombieController
 
     private protected override void ChaseCanSeePlayer()
     {
+        if (ZombieManager.GetInstance().PlayerLocationLightLevel > group.MaxAttackBrightness)
+            if (Agent.remainingDistance > Agent.stoppingDistance + 0.05f)
+            {
+                Agent.isStopped = false;
+                if (Vector3.Distance(Agent.destination, PlayerController.GetInstance().transform.position) > Vector3.Distance(transform.position, PlayerController.GetInstance().transform.position))
+                    return;
+            }
         State = ZombieState.turn;
     }
 
@@ -108,6 +115,19 @@ public class GroupedZombie : ZombieController
     private protected override void ChaseSeePlayer()
     {
         canSeePlayer = true;
+
+        if (ZombieManager.GetInstance().PlayerLocationLightLevel > group.MaxAttackBrightness)
+            if (Agent.remainingDistance <= Agent.stoppingDistance + 0.05f)
+            {
+                Agent.isStopped = true;
+                return;
+            }
+        Agent.isStopped = false;
+    }
+
+    private protected override bool CanAttack()
+    {
+        return ZombieManager.GetInstance().PlayerLocationLightLevel <= group.MaxAttackBrightness;
     }
 
     private protected override void TurnCannotSeePlayer()

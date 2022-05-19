@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 
 public class GroundItemManager : MonoBehaviour
@@ -8,6 +7,14 @@ public class GroundItemManager : MonoBehaviour
 
     private List<GroundItem> groundItems;
     private List<PlacedItem> placedItems;
+
+    [Header("Torch")]
+    [SerializeField] private int torchItemType;
+    [SerializeField] private float torchLightingDistance;
+    [SerializeField] private float torchLightLevelInCenter;
+    [SerializeField] private float torchLightLevelInBorder;
+
+    public float TorchLightingDistance { get => torchLightingDistance;}
 
     private void Awake()
     {
@@ -20,14 +27,6 @@ public class GroundItemManager : MonoBehaviour
 
         groundItems = new List<GroundItem>();
         placedItems = new List<PlacedItem>();
-
-        StartCoroutine(Test());
-    }
-
-    private IEnumerator Test()
-    {
-        yield return new WaitForSeconds(5);
-        AddGroundItem(35796, 2, new Vector3(532.0046f, 37.8f, 365.2126f));
     }
 
     /// <summary>
@@ -124,6 +123,22 @@ public class GroundItemManager : MonoBehaviour
             itemBase.SetActive(showBase);
 
         placedItems.Add(instantiatedItem);
+    }
+
+    public float GetTorchLightLevelInPosition(Vector3 position)
+    {
+        float distanceToNearestTorch = -1;
+        for (int i = 0; i < placedItems.Count; i++)
+        {
+            if (placedItems[i].GetTypeID() != torchItemType)
+                continue;
+            float currentDistance = Vector3.Distance(position, placedItems[i].transform.position);
+            if (currentDistance < distanceToNearestTorch || distanceToNearestTorch == -1)
+                distanceToNearestTorch = currentDistance;
+        }
+        if (distanceToNearestTorch == -1 || distanceToNearestTorch > TorchLightingDistance)
+            return 0;
+        return Mathf.Lerp(torchLightLevelInCenter, torchLightLevelInBorder, distanceToNearestTorch / TorchLightingDistance);
     }
 
     /// <summary>

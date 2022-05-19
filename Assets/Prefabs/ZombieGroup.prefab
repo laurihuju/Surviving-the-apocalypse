@@ -49,3 +49,6 @@ MonoBehaviour:
   checkMaxDistanceFromPlayer: 5
   groupJoiningDistance: 7
   groupJoinCheckDelay: 4
+  maxAttackBrightnessStart: 3
+  maxAttackBrightnessAddition: 2
+  stopDistanceFromBright: 5

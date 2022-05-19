@@ -23,10 +23,20 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] private int maxDropAmount;
     [SerializeField] private float maxDropDistance;
 
+    [Header("Light Detection")]
+    [SerializeField] private float dayStartTime;
+    [SerializeField] private float dayEndTime;
+    [SerializeField] private float dayBrightness;
+    [SerializeField] private float lightCheckDelay;
+    private float playerLocationLightLevel = 0;
+    private float nextLightCheck;
+
     private List<SingleZombie> zombies;
     private List<ZombieGroup> groups;
     private float nextZombieSpawn;
     private float nextDespawnCheck;
+
+    public float PlayerLocationLightLevel { get => playerLocationLightLevel; }
 
     private void Start()
     {
@@ -39,12 +49,6 @@ public class ZombieManager : MonoBehaviour
 
         zombies = new List<SingleZombie>();
         groups = new List<ZombieGroup>();
-
-        zombies.Add(Instantiate(zombiePrefab, new Vector3(530.1385f, 37.61845f, 365.8784f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
-        zombies.Add(Instantiate(zombiePrefab, new Vector3(532.22f, 37.61845f, 364.37f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
-
-        zombies.Add(Instantiate(zombiePrefab, new Vector3(551.8923f, 36.32074f, 360.9696f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
-        zombies.Add(Instantiate(zombiePrefab, new Vector3(551.03f, 36.32074f, 358.85f), zombiePrefab.transform.rotation).GetComponent<SingleZombie>());
     }
 
     private void Update()
@@ -54,6 +58,19 @@ public class ZombieManager : MonoBehaviour
 
         if (Time.time > nextZombieSpawn && zombies.Count < maxZombies)
             SpawnZombie();
+
+        if (Time.time > nextLightCheck)
+            LightCheck();
+    }
+
+    private void LightCheck()
+    {
+        nextLightCheck = Time.time + lightCheckDelay;
+
+        if (DayCycle.GetInstance().GetTime() > dayStartTime && DayCycle.GetInstance().GetTime() < dayEndTime)
+            playerLocationLightLevel = dayBrightness;
+        else
+            playerLocationLightLevel = GroundItemManager.GetInstance().GetTorchLightLevelInPosition(PlayerController.GetInstance().transform.position);
     }
 
     public void RegisterGroup(ZombieGroup group)

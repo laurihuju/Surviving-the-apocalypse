@@ -10,6 +10,10 @@ public class SingleZombie : ZombieController
     [SerializeField] private float groupJoinCheckDelay;
     private protected float nextGroupJoinCheckTime;
 
+    [Header("Light Detection")]
+    [SerializeField] private float maxAttackBrightness;
+    [SerializeField] private float stopDistanceFromBright;
+
     public GroupedZombie GroupedZombie { get => groupedZombie;}
     public float GroupJoinCheckDelay { get => groupJoinCheckDelay;}
     public float GroupJoiningDistance { get => groupJoiningDistance;}
@@ -74,22 +78,47 @@ public class SingleZombie : ZombieController
 
     private protected override void ChaseSetDestination()
     {
+        if(ZombieManager.GetInstance().PlayerLocationLightLevel > maxAttackBrightness)
+        {
+            Agent.SetDestination(PlayerController.GetInstance().transform.position + Vector3.Normalize(transform.position - PlayerController.GetInstance().transform.position) * stopDistanceFromBright);
+            return;
+        }
         Agent.SetDestination(PlayerController.GetInstance().transform.position);
     }
 
     private protected override void ChaseCanSeePlayer()
     {
+        if (ZombieManager.GetInstance().PlayerLocationLightLevel > maxAttackBrightness)
+            if (Agent.remainingDistance > Agent.stoppingDistance + 0.05f)
+            {
+                Agent.isStopped = false;
+                if (Vector3.Distance(Agent.destination, PlayerController.GetInstance().transform.position) > Vector3.Distance(transform.position, PlayerController.GetInstance().transform.position))
+                    return;
+            }
         State = ZombieState.turn;
     }
 
     private protected override void ChaseCannotSeePlayer()
     {
+        Agent.isStopped = false;
+        Agent.SetDestination(PlayerController.GetInstance().transform.position);
         State = ZombieState.check;
     }
 
     private protected override void ChaseSeePlayer()
     {
+        if (ZombieManager.GetInstance().PlayerLocationLightLevel > maxAttackBrightness)
+            if (Agent.remainingDistance <= Agent.stoppingDistance + 0.05f)
+            {
+                Agent.isStopped = true;
+                return;
+            }
+        Agent.isStopped = false;
+    }
 
+    private protected override bool CanAttack()
+    {
+        return ZombieManager.GetInstance().PlayerLocationLightLevel <= maxAttackBrightness;
     }
 
     private protected override void CheckSeePlayer()

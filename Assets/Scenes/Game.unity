@@ -1536,6 +1536,7 @@ Transform:
   - {fileID: 808836980}
   - {fileID: 1550159823}
   - {fileID: 601573653}
+  - {fileID: 1400591579}
   - {fileID: 1538024439}
   m_Father: {fileID: 328000238}
   m_RootOrder: 0
@@ -1559,6 +1560,7 @@ MonoBehaviour:
   - {fileID: 1332256056}
   - {fileID: 601573654}
   - {fileID: 334930625}
+  - {fileID: 1400591580}
 --- !u!1 &202206702
 GameObject:
   m_ObjectHideFlags: 0
@@ -2521,6 +2523,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a82ca36ec5e4194a94d0cc0a0b76a3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  torchItemType: 742975
+  torchLightingDistance: 5
+  torchLightLevelInCenter: 5
+  torchLightLevelInBorder: 3.5
 --- !u!4 &328000238
 Transform:
   m_ObjectHideFlags: 0
@@ -2664,7 +2670,7 @@ MonoBehaviour:
   maxPlaceHeight: 0.5
   obstacleLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 17
   snappers: []
   snapperLayers:
     serializedVersion: 2
@@ -4095,6 +4101,10 @@ MonoBehaviour:
     requireItemAmounts: 01000000
     craftingType: 35796
     craftingAmount: 2
+  - requireItemTypes: d48b0000
+    requireItemAmounts: 05000000
+    craftingType: 742975
+    craftingAmount: 1
 --- !u!1 &581010430
 GameObject:
   m_ObjectHideFlags: 0
@@ -9239,6 +9249,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392854344}
   m_CullTransparentMesh: 1
+--- !u!1 &1400591578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1400591579}
+  - component: {fileID: 1400591580}
+  m_Layer: 0
+  m_Name: TorchItemType
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1400591579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400591578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 191312081}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1400591580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400591578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68a4e4dc84a81d46a5dde790e0c9c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemTypeID: 742975
+  stackSize: 1
+  itemPrefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 874ace4732859bd4493d552a9347fd4c, type: 3}
+  objectWidth: 0.1
+  objectHeight: 1
+  maxPlaceHeight: 0.2
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 17
+  snappers: []
+  snapperLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  maxSnapRange: {x: 0, y: 0, z: 0}
+  requireSnapper: 0
+  objectPrefab: {fileID: 7118677550349713698, guid: 4a4bb0f3040b41e41963eeb981950c66, type: 3}
+  removeFromInventory: 1
 --- !u!1 &1407751167
 GameObject:
   m_ObjectHideFlags: 0
@@ -10187,7 +10258,7 @@ Transform:
   - {fileID: 1332256055}
   - {fileID: 334930624}
   m_Father: {fileID: 191312081}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1542380498
 GameObject:
@@ -12508,6 +12579,10 @@ MonoBehaviour:
   minDropAmount: 2
   maxDropAmount: 5
   maxDropDistance: 1
+  dayStartTime: 0.044
+  dayEndTime: 0.475
+  dayBrightness: 6
+  lightCheckDelay: 1
 --- !u!1 &1822357673
 GameObject:
   m_ObjectHideFlags: 0
