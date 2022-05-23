@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 530.479, y: 40.337364, z: 359.87064}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -51,4 +52,4 @@ MonoBehaviour:
   groupJoinCheckDelay: 4
   maxAttackBrightnessStart: 3
   maxAttackBrightnessAddition: 2
-  stopDistanceFromBright: 5
+  stopDistanceFromBright: 8
