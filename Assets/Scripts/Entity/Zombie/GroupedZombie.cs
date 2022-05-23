@@ -127,7 +127,7 @@ public class GroupedZombie : ZombieController
 
     private protected override bool CanAttack()
     {
-        return ZombieManager.GetInstance().PlayerLocationLightLevel <= group.MaxAttackBrightness;
+        return ZombieManager.GetInstance().PlayerLocationLightLevel <= group.MaxAttackBrightness && Vector3.Distance(AttackPoint.position, PlayerController.GetInstance().PlayerCollider.ClosestPoint(AttackPoint.position)) <= AttackDistance;
     }
 
     private protected override void TurnCannotSeePlayer()

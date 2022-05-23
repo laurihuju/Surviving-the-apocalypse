@@ -2378,6 +2378,7 @@ MonoBehaviour:
   attackDistance: 0.7
   attackCooldown: 2
   attackDamage: 5
+  attackDamageGiveTime: 0.25
   animator: {fileID: -4440116800837289146}
   speedToSwitchRunAnim: 1
   speedToSwitchWalkAnim: 0.15
@@ -2422,6 +2423,7 @@ MonoBehaviour:
   attackDistance: 0.7
   attackCooldown: 2
   attackDamage: 5
+  attackDamageGiveTime: 0.25
   animator: {fileID: -4440116800837289146}
   speedToSwitchRunAnim: 1
   speedToSwitchWalkAnim: 0.15

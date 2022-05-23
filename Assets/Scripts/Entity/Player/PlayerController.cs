@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Physics")]
     [Tooltip("The gravity to set to the physics system")] [SerializeField] private float gravity;
+    [SerializeField] private Collider playerCollider;
 
     [Header("Animation")]
     [SerializeField] private Animator armsAnim;
@@ -28,12 +29,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float zombieSoundSendingDelay = 0.5f;
     [SerializeField] private float zombieSoundVolume = 1;
 
+    [Header("Other")]
+    [SerializeField] private HealthManager healthManager;
+
     private Vector2 movement;
     private Vector2 mouseMovement;
 
     private float xRotation = 0;
 
     private float nextTimeToSendZombieSound = 0;
+
+    public Collider PlayerCollider { get => playerCollider;}
+    public HealthManager HealthManager { get => healthManager;}
 
     private void Awake()
     {

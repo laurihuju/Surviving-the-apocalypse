@@ -118,7 +118,7 @@ public class SingleZombie : ZombieController
 
     private protected override bool CanAttack()
     {
-        return ZombieManager.GetInstance().PlayerLocationLightLevel <= maxAttackBrightness;
+        return ZombieManager.GetInstance().PlayerLocationLightLevel <= maxAttackBrightness && Vector3.Distance(AttackPoint.position, PlayerController.GetInstance().PlayerCollider.ClosestPoint(AttackPoint.position)) <= AttackDistance;
     }
 
     private protected override void CheckSeePlayer()

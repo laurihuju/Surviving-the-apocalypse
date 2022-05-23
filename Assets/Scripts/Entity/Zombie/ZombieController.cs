@@ -36,6 +36,7 @@ public abstract class ZombieController : MonoBehaviour
     [SerializeField] private float attackDistance;
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackDamage;
+    [SerializeField] private float attackDamageGiveTime;
 
     [Header("Animation")]
     [SerializeField] private Animator animator;
@@ -154,33 +155,26 @@ public abstract class ZombieController : MonoBehaviour
         ChaseSeePlayer();
 
         if (CanAttack())
-            Attack();
+            AttackStart();
     }
 
     private protected abstract bool CanAttack();
 
-    private protected virtual void Attack()
+    private protected virtual void AttackStart()
     {
-        Collider[] targets = Physics.OverlapSphere(AttackPoint.position, AttackDistance);
-        if (targets.Length > 0)
-        {
-            for (int i = 0; i < targets.Length; i++)
-            {
-                if (targets[i].CompareTag("Player"))
-                {
-                    HealthManager health = targets[i].GetComponent<HealthManager>();
-                    if (health == null)
-                        break;
-                    health.ChangeHealth(-AttackDamage);
+        attackEnd = Time.time + AttackCooldown;
+        Agent.isStopped = true;
+        isAttacking = true;
+        Animator.SetTrigger("Attack");
 
-                    attackEnd = Time.time + AttackCooldown;
-                    Agent.isStopped = true;
-                    isAttacking = true;
-                    Animator.SetTrigger("Attack");
-                    break;
-                }
-            }
-        }
+        Invoke("AttackEnd", attackDamageGiveTime);
+    }
+
+    private protected virtual void AttackEnd()
+    {
+        if (Vector3.Distance(AttackPoint.position, PlayerController.GetInstance().PlayerCollider.ClosestPoint(AttackPoint.position)) > AttackDistance)
+            return;
+        PlayerController.GetInstance().HealthManager.ChangeHealth(-attackDamage);
     }
 
     private protected abstract void ChaseSetDestination();

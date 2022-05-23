@@ -11519,9 +11519,11 @@ MonoBehaviour:
   groundCheckPoint: {fileID: 581010430}
   groundedDistance: 0.5
   gravity: -15
+  playerCollider: {fileID: 1653663237}
   armsAnim: {fileID: 437011362}
   zombieSoundSendingDelay: 0.5
   zombieSoundVolume: 1
+  healthManager: {fileID: 1653663244}
 --- !u!54 &1653663240
 Rigidbody:
   m_ObjectHideFlags: 0
