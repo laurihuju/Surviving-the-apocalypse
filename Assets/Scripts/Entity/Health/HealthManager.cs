@@ -9,11 +9,14 @@ public class HealthManager : MonoBehaviour
 
     private HealthDisplay healthDisplay;
     private EntityDeath death;
+    private DamageEvent[] damageEvents;
 
     private void Start()
     {
         healthDisplay = GetComponent<HealthDisplay>();
         death = GetComponent<EntityDeath>();
+
+        damageEvents = GetComponents<DamageEvent>();
     }
 
     /// <summary>
@@ -45,6 +48,11 @@ public class HealthManager : MonoBehaviour
         SetHealth(health + changeAmount);
         if(!CompareTag("Player"))
         Debug.Log(this.health);
+
+        if (changeAmount < 0)
+            if (damageEvents != null)
+                for (int i = 0; i < damageEvents.Length; i++)
+                    damageEvents[i].OnDamage();
     }
 
     /// <summary>
