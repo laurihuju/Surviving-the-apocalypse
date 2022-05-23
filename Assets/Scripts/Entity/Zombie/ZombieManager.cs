@@ -67,10 +67,7 @@ public class ZombieManager : MonoBehaviour
     {
         nextLightCheck = Time.time + lightCheckDelay;
 
-        if (DayCycle.GetInstance().GetTime() > dayStartTime && DayCycle.GetInstance().GetTime() < dayEndTime)
-            playerLocationLightLevel = dayBrightness;
-        else
-            playerLocationLightLevel = GroundItemManager.GetInstance().GetTorchLightLevelInPosition(PlayerController.GetInstance().transform.position);
+        playerLocationLightLevel = GroundItemManager.GetInstance().GetTorchLightLevelInPosition(PlayerController.GetInstance().transform.position);
     }
 
     public void RegisterGroup(ZombieGroup group)
