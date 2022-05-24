@@ -12,6 +12,11 @@ public class PlayerDamageEvent : MonoBehaviour, DamageEvent
 
     private float timeShownScreen;
 
+    private void Start()
+    {
+        timeShownScreen = -redScreenShowTime;
+    }
+
 
     private void FixedUpdate()
     {
