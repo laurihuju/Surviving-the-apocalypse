@@ -2693,7 +2693,7 @@ MonoBehaviour:
   itemTypeID: 5795711
   stackSize: 1
   itemPrefab: {fileID: 1892612287822183855, guid: 50e471076a4821f4e9f1b7d5ef21f75a, type: 3}
-  sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 3}
   objectWidth: 0.36
   objectHeight: 0.3654908
   maxPlaceHeight: 0.5
@@ -4286,7 +4286,7 @@ MonoBehaviour:
   itemTypeID: 35789
   stackSize: 1
   itemPrefab: {fileID: 0}
-  sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 3}
   armAnimator: {fileID: 437011362}
   damagePoint: {fileID: 1833624}
   damageDistance: 0.4
@@ -9024,7 +9024,7 @@ MonoBehaviour:
   itemTypeID: 27658
   stackSize: 1
   itemPrefab: {fileID: 919132149155446097, guid: 1e3ab719a408ef441a9e4005470af879, type: 3}
-  sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 3}
   buildingToolMenu: {fileID: 620348613}
   selectionSlots:
   - {fileID: 485082015}
@@ -10655,7 +10655,7 @@ MonoBehaviour:
   itemTypeID: 5738
   stackSize: 1
   itemPrefab: {fileID: 3372855798930527899, guid: e0bf78accc064c046866af1245823e53, type: 3}
-  sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 3}
   objectWidth: 1
   objectHeight: 1
   maxPlaceHeight: 0.5
@@ -11590,7 +11590,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidBody: {fileID: 1653663240}
-  speed: 7
+  walkingSpeed: 7
+  runningSpeed: 10
+  speedChange: 0.14
+  jumpSpeedChange: 0.02
   cameraSpeed: 0.1
   cameraMinRotation: -60
   cameraMaxRotation: 60
@@ -11618,7 +11621,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!114 &1653663241
 MonoBehaviour:
   m_ObjectHideFlags: 0

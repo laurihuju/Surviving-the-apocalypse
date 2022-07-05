@@ -24,8 +24,6 @@ public class BuildingTool : PlaceableItem
 
     private int selectedItem = 0;
 
-    private bool shiftPressed = false;
-
     private void Awake()
     {
         if(instance != null)
@@ -38,8 +36,6 @@ public class BuildingTool : PlaceableItem
     private void Start()
     {
         InputManager.GetInstance().GetInputActions().Game.Scroll.performed += context => MoveSelection(context.ReadValue<float>());
-        InputManager.GetInstance().GetInputActions().Game.Shift.performed += context => shiftPressed = true;
-        InputManager.GetInstance().GetInputActions().Game.Shift.canceled += context => shiftPressed = false;
 
         UpdateUI();
     }
@@ -48,7 +44,7 @@ public class BuildingTool : PlaceableItem
     {
         if (!buildingToolMenu.activeSelf)
             return;
-        if (!shiftPressed)
+        if (!PlayerController.GetInstance().ShiftPressed)
             return;
 
         if(direction < 0)

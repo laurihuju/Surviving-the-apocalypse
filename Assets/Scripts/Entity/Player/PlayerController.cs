@@ -8,18 +8,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody rigidBody;
 
     [Header("Movement")]
-    [Tooltip("Maximum speed")] [SerializeField] private float speed;
-    [Tooltip("The speed of the camera movement.")] [SerializeField] private float cameraSpeed;
+    [SerializeField] [Tooltip("Maximum walking speed")] private float walkingSpeed;
+    [SerializeField] [Tooltip("Maximum running speed")] private float runningSpeed;
+    [SerializeField] private float speedChange;
+    [SerializeField] private float jumpSpeedChange;
+    [SerializeField] [Tooltip("The speed of the camera movement.")] private float cameraSpeed;
     [SerializeField] private float cameraMinRotation;
     [SerializeField] private float cameraMaxRotation;
 
     [Header("Jump")]
-    [Tooltip("The force applied on jump")] [SerializeField] private float jumpForce;
-    [Tooltip("The point where ground check is done")] [SerializeField] private GameObject groundCheckPoint;
-    [Tooltip("Distance from the Ground Check Point to be grounded")] [SerializeField] private float groundedDistance;
+    [SerializeField] [Tooltip("The force applied on jump")] private float jumpForce;
+    [SerializeField] [Tooltip("The point where ground check is done")] private GameObject groundCheckPoint;
+    [SerializeField] [Tooltip("Distance from the Ground Check Point to be grounded")] private float groundedDistance;
 
     [Header("Physics")]
-    [Tooltip("The gravity to set to the physics system")] [SerializeField] private float gravity;
+    [SerializeField] [Tooltip("The gravity to set to the physics system")] private float gravity;
     [SerializeField] private Collider playerCollider;
 
     [Header("Animation")]
@@ -34,6 +37,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 movement;
     private Vector2 mouseMovement;
+    private Vector3 previousVelocity = Vector3.zero;
+    private bool shiftPressed = false;
+    private bool isGrounded = false;
 
     private float xRotation = 0;
 
@@ -41,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     public Collider PlayerCollider { get => playerCollider;}
     public HealthManager HealthManager { get => healthManager;}
+    public bool ShiftPressed { get => shiftPressed;}
 
     private void Awake()
     {
@@ -59,6 +66,9 @@ public class PlayerController : MonoBehaviour
         InputManager.GetInstance().GetInputActions().Game.Movement.performed += context => movement = context.ReadValue<Vector2>();
         InputManager.GetInstance().GetInputActions().Game.Movement.canceled += context => movement = context.ReadValue<Vector2>();
 
+        InputManager.GetInstance().GetInputActions().Game.Shift.performed += context => shiftPressed = true;
+        InputManager.GetInstance().GetInputActions().Game.Shift.canceled += context => shiftPressed = false;
+
         InputManager.GetInstance().GetInputActions().Game.View.performed += context => mouseMovement = context.ReadValue<Vector2>();
 
         InputManager.GetInstance().GetInputActions().Game.Jump.performed += _ => Jump();
@@ -76,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (!IsGrounded())
+        if (!isGrounded)
             return;
         rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.y);
     }
@@ -100,11 +110,27 @@ public class PlayerController : MonoBehaviour
                 nextTimeToSendZombieSound = Time.time + zombieSoundSendingDelay;
             }
         }
+        HandleCameraRotation();
+    }
 
-        Vector3 newVelocity = transform.forward * movement.y * speed + transform.right * movement.x * speed;
+    private void FixedUpdate()
+    {
+        isGrounded = IsGrounded();
+        HandleMovement();
+    }
+
+    private void HandleMovement()
+    {
+        float speedToUse = ((shiftPressed/* && stamina_check!*/) ? runningSpeed : walkingSpeed);
+        Vector3 newVelocity = Vector3.Lerp(previousVelocity, transform.forward * movement.y * speedToUse + transform.right * movement.x * speedToUse, isGrounded ? speedChange : jumpSpeedChange);
         newVelocity[1] = rigidBody.velocity.y;
         rigidBody.velocity = newVelocity;
 
+        previousVelocity = newVelocity;
+    }
+
+    private void HandleCameraRotation()
+    {
         transform.Rotate(new Vector3(0, mouseMovement.x * cameraSpeed, 0));
 
         xRotation += mouseMovement.y * -cameraSpeed;
