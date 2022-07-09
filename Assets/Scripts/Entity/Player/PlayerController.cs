@@ -35,11 +35,11 @@ public class PlayerController : MonoBehaviour
     [Header("Other")]
     [SerializeField] private HealthManager healthManager;
 
-    private Vector2 movement;
-    private Vector2 mouseMovement;
-    private Vector3 previousVelocity = Vector3.zero;
-    private bool shiftPressed = false;
-    private bool isGrounded = false;
+    private Vector2 movement; //Stores the player's current movement imput
+    private Vector2 mouseMovement; //Stores the current mouse movement imput
+    private Vector3 previousVelocity = Vector3.zero; //Stores the velocity from the previous running of the HandleMovement() method
+    private bool shiftPressed = false; //Stores if the shift is pressed currently
+    private bool isGrounded = false; //Stores the player's current grounded status
 
     private float xRotation = 0;
 
@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        //Set the singleton instance
         if(instance != null)
         {
             Destroy(gameObject);
@@ -58,11 +59,13 @@ public class PlayerController : MonoBehaviour
         }
         instance = this;
 
+        //Set the physics gravity value
         Physics.gravity = new Vector3(0, gravity, 0);
     }
 
     private void Start()
     {
+        //Register input actions
         InputManager.GetInstance().GetInputActions().Game.Movement.performed += context => movement = context.ReadValue<Vector2>();
         InputManager.GetInstance().GetInputActions().Game.Movement.canceled += context => movement = context.ReadValue<Vector2>();
 
@@ -84,20 +87,30 @@ public class PlayerController : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Called when the player presses jump button.
+    /// </summary>
     private void Jump()
     {
+        //The player can't jump if it isn't grounded
         if (!isGrounded)
             return;
-        rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.y);
+        rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.y); //Start jumping by setting the player's y velocity to the jump force
     }
 
+    /// <summary>
+    /// Checks if the player is grounded
+    /// </summary>
+    /// <returns></returns>
     private bool IsGrounded()
     {
+        //Raycast down from the player to check if there is ground beneath the player
         return Physics.Raycast(groundCheckPoint.transform.position, Vector3.down, groundedDistance);
     }
 
     private void Update()
     {
+        //Set the animator's walking status and send walking sounds to zombies
         if (movement.magnitude == 0)
         {
             armsAnim.SetBool("Walking", false);
@@ -110,23 +123,30 @@ public class PlayerController : MonoBehaviour
                 nextTimeToSendZombieSound = Time.time + zombieSoundSendingDelay;
             }
         }
-        HandleCameraRotation();
+        HandleCameraRotation(); //Handle the camera's rotation
     }
 
     private void FixedUpdate()
     {
-        isGrounded = IsGrounded();
-        HandleMovement();
+        isGrounded = IsGrounded(); //Check if the player is grounded
+        HandleMovement(); //Handle the player's movement
     }
 
+    /// <summary>
+    /// Handles the player's movement. Should be called in FixedUpdate.
+    /// </summary>
     private void HandleMovement()
     {
-        float speedToUse = ((shiftPressed/* && stamina_check!*/) ? runningSpeed : walkingSpeed);
-        Vector3 newVelocity = Vector3.Lerp(previousVelocity, transform.forward * movement.y * speedToUse + transform.right * movement.x * speedToUse, isGrounded ? speedChange : jumpSpeedChange);
-        newVelocity[1] = rigidBody.velocity.y;
-        rigidBody.velocity = newVelocity;
+        float speedToUse = ((shiftPressed/* && stamina_check!*/) ? runningSpeed : walkingSpeed); //The maximum speed to use in the target velocity
+        Vector3 xVelocity = transform.right * movement.x * speedToUse; //The player's target velocity in the x axis relative to player's rotation from the input's (Vector2) x axis (a and d buttons)
+        Vector3 zVelocity = transform.forward * movement.y * speedToUse; //The player's target velocity in the z axis relative to player's rotation from the input's (Vector2) y axis (w and s buttons)
+        float speedChangeToUse = isGrounded ? speedChange : jumpSpeedChange; //The lerping speed to use in the velocity changing. The value is supposed to be lower when the player is jumping so the player can control the velocity less.
 
-        previousVelocity = newVelocity;
+        Vector3 newVelocity = Vector3.Lerp(previousVelocity, xVelocity + zVelocity, speedChangeToUse); //Lerp smoothly from previous velocity to the target velocity using the calculated speed change. The target velocity is sum of the target velocitys in the player's relative x and z axis.
+        newVelocity[1] = rigidBody.velocity.y; //Set the new velocity's y to the y of the current velocity so that the y of the new velocity won't be always 0
+        rigidBody.velocity = newVelocity; //Set the new velocity to the rigidbody's velocity
+
+        previousVelocity = newVelocity; //Set the previous velocity variable used in the next running of this method
     }
 
     private void HandleCameraRotation()
