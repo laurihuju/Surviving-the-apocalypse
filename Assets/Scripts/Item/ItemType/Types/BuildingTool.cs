@@ -167,6 +167,11 @@ public class BuildingTool : PlaceableItem
         return buildingItemTypes[selectedItem].GetSnapLocationNoCheck();
     }
 
+    public override bool ShowBase()
+    {
+        return buildingItemTypes[selectedItem].ShowBase();
+    }
+
     public override GameObject PlaceItem(Vector3 position, Quaternion rotation)
     {
         return buildingItemTypes[selectedItem].PlaceItem(position, rotation);

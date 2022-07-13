@@ -2694,8 +2694,9 @@ MonoBehaviour:
   stackSize: 1
   itemPrefab: {fileID: 1892612287822183855, guid: 50e471076a4821f4e9f1b7d5ef21f75a, type: 3}
   sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 3}
-  objectWidth: 0.36
-  objectHeight: 0.3654908
+  offsetFromPlacementCornerToCenter: {x: 0, y: 0, z: 0}
+  offsetFromPlacementCornerToPlacementPoint: {x: 0, y: 0, z: 0}
+  placementCheckSize: {x: 0, y: 0, z: 0}
   maxPlaceHeight: 0.5
   obstacleLayers:
     serializedVersion: 2
@@ -9033,7 +9034,12 @@ MonoBehaviour:
   buildingItemTypes:
   - {fileID: 1550159824}
   - {fileID: 334930625}
+  - {fileID: 2106257245}
   buildingItemRecipes:
+  - requireItemTypes: d48b0000
+    requireItemAmounts: 01000000
+    craftingType: 0
+    craftingAmount: 0
   - requireItemTypes: d48b0000
     requireItemAmounts: 01000000
     craftingType: 0
@@ -9460,8 +9466,9 @@ MonoBehaviour:
   stackSize: 1
   itemPrefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: 874ace4732859bd4493d552a9347fd4c, type: 3}
-  objectWidth: 0.1
-  objectHeight: 1
+  offsetFromPlacementCornerToCenter: {x: 0, y: 0, z: 0}
+  offsetFromPlacementCornerToPlacementPoint: {x: 0, y: 0, z: 0}
+  placementCheckSize: {x: 0, y: 0, z: 0}
   maxPlaceHeight: 0.2
   obstacleLayers:
     serializedVersion: 2
@@ -10434,6 +10441,7 @@ Transform:
   m_Children:
   - {fileID: 1332256055}
   - {fileID: 334930624}
+  - {fileID: 2106257244}
   m_Father: {fileID: 191312081}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10656,12 +10664,13 @@ MonoBehaviour:
   stackSize: 1
   itemPrefab: {fileID: 3372855798930527899, guid: e0bf78accc064c046866af1245823e53, type: 3}
   sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 3}
-  objectWidth: 1
-  objectHeight: 1
+  offsetFromPlacementCornerToCenter: {x: 0.5, y: 0.5, z: -0.5}
+  offsetFromPlacementCornerToPlacementPoint: {x: 0.5, y: 0.5, z: -0.5}
+  placementCheckSize: {x: 0.49, y: 0.49, z: 0.49}
   maxPlaceHeight: 0.5
   obstacleLayers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 951
   snappers:
   - 0
   snapperLayers:
@@ -14780,7 +14789,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b7f736d12caf9240b8e9b479342a281, type: 2}
+  - {fileID: 2100000, guid: ed1fb04d59e4cbd45929b1dd76ccfce0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15343,6 +15352,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2105007548}
   m_CullTransparentMesh: 1
+--- !u!1 &2106257243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2106257244}
+  - component: {fileID: 2106257245}
+  m_Layer: 0
+  m_Name: Stone Floor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2106257244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106257243}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1538024439}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2106257245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106257243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68a4e4dc84a81d46a5dde790e0c9c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemTypeID: 267476
+  stackSize: 1
+  itemPrefab: {fileID: 14892592839951783, guid: 600d758aebf8c614b93bc9a6d07173cd, type: 3}
+  sprite: {fileID: 21300000, guid: 20c7256808223e042b8819af83e5c9a8, type: 3}
+  offsetFromPlacementCornerToCenter: {x: 1.0404375, y: 0.408086, z: 1.9324034}
+  offsetFromPlacementCornerToPlacementPoint: {x: 0.04, y: 0.544, z: 3.98}
+  placementCheckSize: {x: 1.030437, y: 0.398086, z: 1.922403}
+  maxPlaceHeight: 1.4
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 951
+  snappers:
+  - 2568956
+  snapperLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  maxSnapRange: {x: 0.2, y: 0.2, z: 0.2}
+  requireSnapper: 0
+  objectPrefab: {fileID: 14892592839951783, guid: 600d758aebf8c614b93bc9a6d07173cd, type: 3}
+  removeFromInventory: 1
 --- !u!1 &2108307029
 GameObject:
   m_ObjectHideFlags: 0

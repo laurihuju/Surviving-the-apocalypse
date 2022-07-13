@@ -10,6 +10,8 @@ public abstract class PlaceableItem : ItemType
 
     public abstract Quaternion GetSnapLocationNoCheck();
 
+    public abstract bool ShowBase();
+
     public abstract GameObject PlaceItem(Vector3 position, Quaternion rotation);
 
     public abstract int GetPlaceItemID();

@@ -81,16 +81,15 @@ public class ItemPlace : MonoBehaviour
         if (currentItem.CanSnapNoCheck())
         {
             placeRotation = currentItem.GetSnapLocationNoCheck();
-            if(previewBase != null)
-                previewBase.SetActive(false);
         }
         else
         {
             placeRotation = PlayerController.GetInstance().transform.rotation;
-            if(previewBase != null)
-                previewBase.SetActive(true);
         }
         previewTransform.SetPositionAndRotation(placeLocation, placeRotation);
+
+        if (previewBase != null)
+            previewBase.SetActive(currentItem.ShowBase());
 
         if (currentItem.CanPlaceNoCheck())
         {
@@ -131,22 +130,20 @@ public class ItemPlace : MonoBehaviour
         PlaceableItem placeableItem = GetCurrentItem();
         if (placeableItem == null)
             return;
+
         Vector3 placeLocation = GetPlaceLocation();
         if (placeLocation == Vector3.zero)
             return;
         if (!placeableItem.CanPlaceNoCheck())
             return;
+
         Quaternion placeRotation;
-        bool showBase;
         if (placeableItem.CanSnapNoCheck())
-        {
             placeRotation = placeableItem.GetSnapLocationNoCheck();
-            showBase = false;
-        } else{
+        else
             placeRotation = PlayerController.GetInstance().transform.rotation;
-            showBase = true;
-        }
-        GroundItemManager.GetInstance().PlaceItem(placeableItem, placeLocation, placeRotation, showBase);
+
+        GroundItemManager.GetInstance().PlaceItem(placeableItem, placeLocation, placeRotation);
         placeableItem.OnPlace(HotBar.GetInstance().GetActiveSlot(), false);
     }
 

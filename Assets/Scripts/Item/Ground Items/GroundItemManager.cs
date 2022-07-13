@@ -113,14 +113,14 @@ public class GroundItemManager : MonoBehaviour
         }
     }
 
-    public void PlaceItem(PlaceableItem type, Vector3 position, Quaternion rotation, bool showBase)
+    public void PlaceItem(PlaceableItem type, Vector3 position, Quaternion rotation)
     {
         PlacedItem instantiatedItem = type.PlaceItem(position, rotation).GetComponent<PlacedItem>();
         if (instantiatedItem == null)
             return;
         GameObject itemBase = instantiatedItem.GetItemBase();
         if (itemBase != null)
-            itemBase.SetActive(showBase);
+            itemBase.SetActive(type.ShowBase());
 
         placedItems.Add(instantiatedItem);
     }
