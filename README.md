@@ -29,3 +29,8 @@ This is an unfinished 3D survival game project that I developed as a school proj
   - Post processing
   - Fog
   - Lighting
+
+## The Development of the Game
+
+- I developed the game to its current state in about eight weeks. The project was so big that I didn't have time to add actual content (for example building the world and adding new item types).
+- The graphic assets I used were mainly free assets downloaded from the internet. Despite this I made the inventory menu UI assets myself.
